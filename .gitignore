@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# next.js
+apps/web/.next/
+apps/web/out/
+
+# nest / node build output
+apps/api/dist/
+
+# prisma
+apps/api/generated/
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# os
+.DS_Store
+
+# editors
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# docker volumes
+.docker-data/

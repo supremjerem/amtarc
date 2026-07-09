@@ -1,0 +1,19 @@
+{
+  "name": "amtarc",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "concurrently -n web,api -c blue,green \"pnpm --filter web dev\" \"pnpm --filter api start:dev\"",
+    "build": "pnpm --filter web build && pnpm --filter api build",
+    "lint": "pnpm --filter web lint && pnpm --filter api lint",
+    "db:migrate": "pnpm --filter api exec prisma migrate dev",
+    "db:seed": "pnpm --filter api exec prisma db seed",
+    "db:studio": "pnpm --filter api exec prisma studio"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "prettier": "^3.9.4"
+  }
+}
