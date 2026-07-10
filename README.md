@@ -1,5 +1,7 @@
 # AMTARC — website monorepo
 
+![AMTARC homepage screenshot](screenshot.jpg)
+
 Website for **AMTARC** (Association Meauzacaise de Tireurs aux Armes Rayées et de Chasse), a sports-shooting club in Meauzac (Tarn-et-Garonne, France).
 
 Rebuilt from a Claude Design HTML prototype into a real, maintainable stack.
