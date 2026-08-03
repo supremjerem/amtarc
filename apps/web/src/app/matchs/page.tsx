@@ -4,7 +4,8 @@ import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
 import { Container } from '@/components/ui/Container';
 import { SectionKicker } from '@/components/ui/SectionKicker';
-import { formatFee, formatMatchDates, getPublishedMatches } from '@/lib/matches';
+import { RegistrationLookup } from '@/components/matches/RegistrationLookup';
+import { formatFee, formatMatchDates, getPublishedMatches, remainingSpots } from '@/lib/matches';
 
 export const metadata: Metadata = {
   title: 'Matchs — AMTARC',
@@ -48,6 +49,8 @@ export default async function MatchesPage() {
                       {match.stages ? `${match.stages} stages · ` : ''}
                       {match.rounds ? `≈${match.rounds} coups · ` : ''}
                       {formatFee(match.feeCents)}
+                      {remainingSpots(match) !== null &&
+                        ` · ${remainingSpots(match)} place(s) restante(s)`}
                     </p>
                   </div>
                   <Link
@@ -60,6 +63,10 @@ export default async function MatchesPage() {
               </li>
             ))}
           </ul>
+
+          <div className="mt-10">
+            <RegistrationLookup />
+          </div>
         </Container>
       </main>
       <Footer />

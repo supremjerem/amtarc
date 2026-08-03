@@ -48,6 +48,7 @@ model Match {
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   squads               Squad[]
+  registrations        Registration[]
 }
 
 model Squad {
@@ -59,6 +60,66 @@ model Squad {
   startTime  String
   targetSize Int      @default(12)
   position   Int      @default(0)
+}
+
+enum Division {
+  OPEN
+  STANDARD
+  PRODUCTION
+  REVOLVER
+  CLASSIC
+  PRODUCTION_OPTICS
+  OPTICS
+  PCC
+}
+
+enum ShooterCategory {
+  OVERALL
+  JUNIOR
+  LADY
+  SENIOR
+  SUPER_SENIOR
+}
+
+enum RegistrationStatus {
+  AWAITING_PAYMENT
+  CONFIRMED
+  WAITLISTED
+  CANCELLED
+}
+
+// A shooter's entry to a match. `reference` is the human-friendly code used as
+// the bank-transfer label so organizers can match payments to entries.
+// squadId stays null until squadding (phase 3) assigns it.
+model Registration {
+  id            String             @id @default(cuid())
+  reference     String             @unique
+  matchId       String
+  match         Match              @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  squadId       String?
+  firstName     String
+  lastName      String
+  email         String
+  licenceNumber String
+  club          String?
+  region        String?
+  division      Division
+  category      ShooterCategory    @default(OVERALL)
+  status        RegistrationStatus @default(AWAITING_PAYMENT)
+  paidAt        DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  squadRequests SquadRequest[]
+
+  @@unique([matchId, email])
+}
+
+// Free-text "I want to shoot with…" wishes, input to the squadding algorithm.
+model SquadRequest {
+  id             String       @id @default(cuid())
+  registrationId String
+  registration   Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  requestedName  String
 }
 
 // Editable site copy, one row per page section (hero, announcements, ...).

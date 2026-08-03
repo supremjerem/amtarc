@@ -11,10 +11,11 @@ const ALLOWED_ROUTES: Record<string, RegExp[]> = {
     /^content$/,
     /^matches\/admin$/,
     /^matches\/admin\/[^/]+$/,
+    /^matches\/[^/]+\/registrations$/,
   ],
   POST: [/^news$/, /^uploads$/, /^matches$/],
   PUT: [/^content\/[a-z-]+$/, /^matches\/[^/]+\/squads$/],
-  PATCH: [/^news\/[^/]+$/, /^matches\/[^/]+$/],
+  PATCH: [/^news\/[^/]+$/, /^matches\/[^/]+$/, /^registrations\/[^/]+\/(paid|cancel)$/],
   DELETE: [/^news\/[^/]+$/, /^matches\/[^/]+$/],
 };
 

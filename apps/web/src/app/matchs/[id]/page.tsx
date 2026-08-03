@@ -4,7 +4,15 @@ import { notFound } from 'next/navigation';
 import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
 import { Container } from '@/components/ui/Container';
-import { formatDay, formatFee, formatMatchDates, getPublishedMatch } from '@/lib/matches';
+import { RegistrationForm } from '@/components/matches/RegistrationForm';
+import {
+  formatDay,
+  formatFee,
+  formatMatchDates,
+  getPublishedMatch,
+  matchCapacity,
+  remainingSpots,
+} from '@/lib/matches';
 
 type PageProps = Readonly<{ params: Promise<{ id: string }> }>;
 
@@ -22,6 +30,19 @@ export default async function MatchDetailPage({ params }: PageProps) {
         new Date(match.registrationDeadline),
       )
     : null;
+  const registrationsClosed = match.registrationDeadline
+    ? new Date() > new Date(match.registrationDeadline)
+    : false;
+  const capacity = matchCapacity(match);
+  const remaining = remainingSpots(match);
+  const paymentRecap = [
+    match.paymentPayee && `Bénéficiaire : ${match.paymentPayee}`,
+    match.paymentIban && `IBAN : ${match.paymentIban}`,
+    `Montant : ${formatFee(match.feeCents)}`,
+    match.paymentInstructions,
+  ]
+    .filter(Boolean)
+    .join('\n');
 
   return (
     <div className="relative w-full overflow-hidden bg-page-gradient">
@@ -67,6 +88,14 @@ export default async function MatchDetailPage({ params }: PageProps) {
                 <div className="text-sm text-ink-soft">clôture des inscriptions</div>
               </div>
             )}
+            {capacity !== null && (
+              <div className="rounded-card border border-ink/10 bg-white p-5 shadow-card">
+                <div className="text-2xl font-extrabold">
+                  {remaining} / {capacity}
+                </div>
+                <div className="text-sm text-ink-soft">places restantes</div>
+              </div>
+            )}
           </div>
 
           {match.squads.length > 0 && (
@@ -95,6 +124,22 @@ export default async function MatchDetailPage({ params }: PageProps) {
                 </table>
               </div>
             </>
+          )}
+
+          <h2 className="mb-4 text-xl font-extrabold tracking-[-0.01em]">Inscription</h2>
+          {registrationsClosed ? (
+            <p className="mb-10 text-sm text-ink-soft">
+              Les inscriptions sont closes pour ce match.
+            </p>
+          ) : (
+            <div className="mb-10">
+              {remaining === 0 && (
+                <p className="mb-4 text-sm font-semibold text-ink-soft">
+                  Le match est complet — vous pouvez encore vous inscrire en liste d&apos;attente.
+                </p>
+              )}
+              <RegistrationForm matchId={match.id} paymentRecap={paymentRecap || null} />
+            </div>
           )}
 
           {(match.paymentIban || match.paymentInstructions) && (

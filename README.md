@@ -87,9 +87,10 @@ Done:
 
 Planned:
 
-- [ ] Match booking system (phase 1 done: matches/squads CRUD + public /matchs pages): online registration with "shoot with" squadding preferences and an
-      auto-squadding proposal (~12 per squad), bank-transfer payment tracked per match, federation
-      export for Level 2/3 — see [docs/match-booking-plan.md](docs/match-booking-plan.md)
+- [ ] Match booking system (phases 1–2 done: match/squad catalog, online registration with
+      "shoot with" wishes, wait-list with auto-promotion, bank-transfer tracking, emails):
+      next up the auto-squadding proposal (~12 per squad) and the federation export for
+      Level 2/3 — see [docs/match-booking-plan.md](docs/match-booking-plan.md)
 - [ ] Transactional emails (booking confirmations, admin notifications)
 - [ ] Continuous deployment once a hosting target is chosen (staging → production via GitHub Environments)
 - [ ] Shared `packages/` workspace for API/web DTO types
