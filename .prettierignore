@@ -1,0 +1,7 @@
+pnpm-lock.yaml
+apps/web/.next/
+apps/web/out/
+apps/api/dist/
+apps/api/generated/
+coverage/
+docs/screenshot.jpg
