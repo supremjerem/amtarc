@@ -6,6 +6,8 @@ export const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default('7d'),
   PORT: z.coerce.number().default(3001),
   API_PUBLIC_URL: z.string().default('http://localhost:3001'),
+  // Number of reverse-proxy hops in front of the API; 0 when exposed directly.
+  TRUST_PROXY: z.coerce.number().int().min(0).default(0),
   CORS_ORIGIN: z.string().min(1),
   ADMIN_EMAIL: z.string().email(),
   ADMIN_PASSWORD: z.string().min(1),

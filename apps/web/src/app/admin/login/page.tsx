@@ -17,6 +17,9 @@ export default function AdminLoginPage() {
     setError(null);
     try {
       const response = await login(email, password);
+      if (response.status === 429) {
+        throw new Error('Trop de tentatives. Réessayez dans quelques minutes.');
+      }
       if (!response.ok) throw new Error('Identifiants invalides.');
       router.replace('/admin/news');
     } catch (err) {

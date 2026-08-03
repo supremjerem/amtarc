@@ -16,7 +16,7 @@ apps/web/out/
 apps/api/dist/
 
 # prisma
-apps/api/generated/
+apps/api/src/generated/
 
 # logs
 *.log
@@ -39,3 +39,11 @@ apps/api/uploads/
 
 # test coverage reports (generated)
 coverage/
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# stray compiler output next to sources
+apps/api/**/*.js.map
+apps/api/prisma.config.d.ts
+apps/api/prisma/seed.d.ts

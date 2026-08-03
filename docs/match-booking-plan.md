@@ -108,7 +108,8 @@ squad assignment published. Provider with an EU presence (Brevo or Resend).
    grouping of transitive requests, oversized-group splitting, best-fit packing
    into target sizes), JWT-guarded proposal/apply endpoints, an admin board with
    per-squad columns and manual overrides, and FFTir-style public squad rosters
-   (names and divisions only). Wait-list automation shipped with phase 2.
+   (names, division and squad only — no contact details, and no payment status,
+   which stays visible to organizers alone). Wait-list automation shipped with phase 2.
 4. ✅ Federation export (Level 2/3). Shipped 2026-08: guarded CSV export of a
    match's active registrations (cancelled entries are never reported), ordered
    by squad, downloadable from the admin registrations page.

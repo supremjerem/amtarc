@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { RegistrationStatus } from '../../generated/prisma/client';
+import { RegistrationStatus } from '../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { RevalidateService } from '../revalidate/revalidate.service';
 import { CreateMatchDto } from './dto/create-match.dto';
@@ -43,8 +43,9 @@ export class MatchesService {
       include: {
         ...squadsOrdered,
         ...activeRegistrationsCount,
-        // Public roster, FFTir-style: names and divisions only — no contact
-        // or licence data.
+        // Public roster, FFTir-style: names, division and squad only. No
+        // contact or licence data, and deliberately no payment status — who
+        // has not paid yet is the organizers' business, not the public's.
         registrations: {
           where: {
             status: { in: [RegistrationStatus.AWAITING_PAYMENT, RegistrationStatus.CONFIRMED] },
@@ -57,7 +58,6 @@ export class MatchesService {
             division: true,
             category: true,
             squadId: true,
-            status: true,
           },
         },
       },

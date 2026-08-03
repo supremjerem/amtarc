@@ -1,0 +1,11 @@
+{
+  // Wider program than the build config: covers tests and tooling files so
+  // ESLint and `pnpm typecheck` see every source file. Never emits, so the
+  // build's rootDir constraint does not apply.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "."
+  },
+  "include": ["src/**/*", "test/**/*", "prisma/**/*", "prisma.config.ts"]
+}

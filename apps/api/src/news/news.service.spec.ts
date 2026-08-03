@@ -141,6 +141,19 @@ describe('NewsService', () => {
 
       await expect(service.findBySlug('missing')).rejects.toBeInstanceOf(NotFoundException);
     });
+
+    it('should hide unpublished drafts from the public slug route', async () => {
+      prisma.news.findUnique.mockResolvedValue({ ...newsItem, published: false });
+
+      await expect(service.findBySlug(newsItem.slug)).rejects.toBeInstanceOf(NotFoundException);
+    });
+
+    it('should still return unpublished items on the admin id route', async () => {
+      const draft = { ...newsItem, published: false };
+      prisma.news.findUnique.mockResolvedValue(draft);
+
+      await expect(service.findOne('news-1')).resolves.toEqual(draft);
+    });
   });
 
   describe('findPublished', () => {

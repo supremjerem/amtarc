@@ -17,7 +17,7 @@ import {
   type Match,
   type Prisma,
   type Registration,
-} from '../../generated/prisma/client';
+} from '../generated/prisma/client';
 
 // Statuses that hold a spot against squad capacity.
 const ACTIVE_STATUSES: RegistrationStatus[] = [
@@ -70,44 +70,50 @@ export class RegistrationsService {
       .map((name) => name.trim())
       .filter((name) => name !== '');
 
-    const registration = await this.prisma.$transaction(async (tx) => {
-      const activeCount = await tx.registration.count({
-        where: { matchId, status: { in: ACTIVE_STATUSES } },
-      });
-      const waitlisted = capacity !== null && activeCount >= capacity;
-      try {
-        return await tx.registration.create({
-          data: {
-            matchId,
-            reference: await this.generateReference(tx),
-            firstName: dto.firstName,
-            lastName: dto.lastName,
-            email: dto.email.toLowerCase(),
-            licenceNumber: dto.licenceNumber,
-            club: dto.club,
-            region: dto.region,
-            division: dto.division,
-            category: dto.category,
-            status: waitlisted
-              ? RegistrationStatus.WAITLISTED
-              : RegistrationStatus.AWAITING_PAYMENT,
-            squadRequests: {
-              create: requestedNames.map((requestedName) => ({ requestedName })),
-            },
-          },
-          include: { squadRequests: true },
+    // Serializable so two simultaneous registrations cannot both read the same
+    // spot count and overfill the match; Postgres aborts the loser, which
+    // surfaces as a 500 the shooter can retry.
+    const registration = await this.prisma.$transaction(
+      async (tx) => {
+        const activeCount = await tx.registration.count({
+          where: { matchId, status: { in: ACTIVE_STATUSES } },
         });
-      } catch (error) {
-        if (
-          error instanceof Error &&
-          'code' in error &&
-          (error as { code?: string }).code === 'P2002'
-        ) {
-          throw new ConflictException('This email is already registered for this match');
+        const waitlisted = capacity !== null && activeCount >= capacity;
+        try {
+          return await tx.registration.create({
+            data: {
+              matchId,
+              reference: await this.generateReference(tx),
+              firstName: dto.firstName,
+              lastName: dto.lastName,
+              email: dto.email.toLowerCase(),
+              licenceNumber: dto.licenceNumber,
+              club: dto.club,
+              region: dto.region,
+              division: dto.division,
+              category: dto.category,
+              status: waitlisted
+                ? RegistrationStatus.WAITLISTED
+                : RegistrationStatus.AWAITING_PAYMENT,
+              squadRequests: {
+                create: requestedNames.map((requestedName) => ({ requestedName })),
+              },
+            },
+            include: { squadRequests: true },
+          });
+        } catch (error) {
+          if (
+            error instanceof Error &&
+            'code' in error &&
+            (error as { code?: string }).code === 'P2002'
+          ) {
+            throw new ConflictException('This email is already registered for this match');
+          }
+          throw error;
         }
-        throw error;
-      }
-    });
+      },
+      { isolationLevel: 'Serializable' },
+    );
 
     await this.sendRegistrationEmail(match, registration);
     return registration;

@@ -11,15 +11,26 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "target": "ES2023",
+    // TypeScript 6 no longer auto-includes every @types package.
+    "types": ["node", "jest"],
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    // TypeScript 6 requires an explicit rootDir; "./src" preserves the existing
+    // dist/main.js layout that start:prod expects.
+    "rootDir": "./src",
     "incremental": true,
+    // Inside outDir so deleteOutDir clears it too; otherwise a stale
+    // buildinfo makes nest build skip emitting after dist is wiped.
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "skipLibCheck": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  // Emit layout: src only, so dist/main.js stays where start:prod expects it.
+  // tsconfig.eslint.json widens the program for linting and type-checking.
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules", "prisma", "prisma.config.ts"]
 }

@@ -32,9 +32,10 @@ export class NewsService {
     return this.prisma.news.findMany({ orderBy: { createdAt: 'desc' } });
   }
 
+  // Public route: unpublished drafts must stay invisible, like matches.
   async findBySlug(slug: string) {
     const item = await this.prisma.news.findUnique({ where: { slug } });
-    if (!item) throw new NotFoundException(`News "${slug}" not found`);
+    if (!item || !item.published) throw new NotFoundException(`News "${slug}" not found`);
     return item;
   }
 

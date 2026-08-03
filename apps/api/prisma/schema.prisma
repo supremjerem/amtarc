@@ -1,6 +1,6 @@
 generator client {
   provider      = "prisma-client"
-  output        = "../generated/prisma"
+  output        = "../src/generated/prisma"
   moduleFormat  = "cjs"
 }
 
@@ -26,6 +26,9 @@ model News {
   publishedAt DateTime?    @default(now())
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+
+  // Public listing filters on published and orders by publication date.
+  @@index([published, publishedAt])
 }
 
 // IPSC matches organized by the club. Registrations arrive in a later phase;
@@ -49,6 +52,9 @@ model Match {
   updatedAt            DateTime  @updatedAt
   squads               Squad[]
   registrations        Registration[]
+
+  // Public listing filters on published and orders by start date.
+  @@index([published, startDate])
 }
 
 model Squad {
@@ -60,6 +66,8 @@ model Squad {
   startTime  String
   targetSize Int      @default(12)
   position   Int      @default(0)
+
+  @@index([matchId])
 }
 
 enum Division {
@@ -112,6 +120,9 @@ model Registration {
   squadRequests SquadRequest[]
 
   @@unique([matchId, email])
+  // Capacity counts and the admin/export listings all filter on these.
+  @@index([matchId, status])
+  @@index([matchId, squadId])
 }
 
 // Free-text "I want to shoot with…" wishes, input to the squadding algorithm.
@@ -120,6 +131,8 @@ model SquadRequest {
   registrationId String
   registration   Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
   requestedName  String
+
+  @@index([registrationId])
 }
 
 // Editable site copy, one row per page section (hero, announcements, ...).

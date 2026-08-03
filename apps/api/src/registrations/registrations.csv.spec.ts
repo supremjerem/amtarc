@@ -58,10 +58,17 @@ describe('buildRegistrationsCsv', () => {
     expect(csv).toContain('"Club ""Le Trèfle""; Section IPSC"');
   });
 
-  it('neutralizes cells a spreadsheet would read as a formula', () => {
-    const csv = buildRegistrationsCsv([registration({ lastName: '=SUM(A1:A9)' })], squads);
+  it.each([
+    ['=', '=SUM(A1:A9)'],
+    ['+', '+1+1'],
+    ['-', '-1+1'],
+    ['@', '@SUM(A1)'],
+    ['tab', '\t=HYPERLINK(https://evil.test)'],
+    ['carriage return', '\r=cmd|calc'],
+  ])('neutralizes a leading %s that a spreadsheet would read as a formula', (_label, payload) => {
+    const csv = buildRegistrationsCsv([registration({ lastName: payload })], squads);
 
-    expect(csv).toContain("'=SUM(A1:A9)");
+    expect(csv).toContain(`'${payload}`);
   });
 
   it('falls back to the raw enum value for unknown divisions', () => {

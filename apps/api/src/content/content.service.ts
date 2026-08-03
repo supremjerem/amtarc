@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { RevalidateService } from '../revalidate/revalidate.service';
-import type { Prisma } from '../../generated/prisma/client';
+import type { Prisma } from '../generated/prisma/client';
 
 // Sections the web app knows how to render; keep in sync with
 // apps/web/src/lib/site-content.ts.

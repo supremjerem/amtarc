@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ContentService } from './content.service';
 import { UpdateContentDto } from './dto/update-content.dto';
-import type { Prisma } from '../../generated/prisma/client';
+import type { Prisma } from '../generated/prisma/client';
 
 @Controller('content')
 export class ContentController {

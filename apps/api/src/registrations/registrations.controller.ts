@@ -12,6 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import type { Response } from 'express';
+import { seconds, Throttle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RegistrationsService } from './registrations.service';
 import { ApplySquaddingDto } from './dto/apply-squadding.dto';
@@ -21,11 +22,17 @@ import { CreateRegistrationDto } from './dto/create-registration.dto';
 export class RegistrationsController {
   constructor(private readonly registrationsService: RegistrationsService) {}
 
+  // Registering sends an email and holds a spot, so keep it well below what a
+  // human needs (a few retries after a validation error).
+  @Throttle({ default: { ttl: seconds(600), limit: 5 } })
   @Post('matches/:matchId/registrations')
   register(@Param('matchId') matchId: string, @Body() dto: CreateRegistrationDto) {
     return this.registrationsService.register(matchId, dto);
   }
 
+  // Reference + email is guessable in principle; throttle to make enumeration
+  // impractical.
+  @Throttle({ default: { ttl: seconds(60), limit: 10 } })
   @Get('registrations/lookup')
   lookup(@Query('reference') reference = '', @Query('email') email = '') {
     return this.registrationsService.lookup(reference, email);

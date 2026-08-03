@@ -23,8 +23,18 @@ const ALLOWED_ROUTES: Record<string, RegExp[]> = {
 
 type RouteContext = { params: Promise<{ path: string[] }> };
 
+// Segments are matched after decoding, so reject anything that could change the
+// path's meaning once fetch() normalizes it (traversal, an injected query or
+// fragment, or a smuggled separator) before the allowlist is consulted.
+const SAFE_SEGMENT = /^[A-Za-z0-9._-]+$/;
+
 async function proxyRequest(request: NextRequest, context: RouteContext) {
-  const apiPath = (await context.params).path.join('/');
+  const segments = (await context.params).path;
+  if (!segments.every((segment) => SAFE_SEGMENT.test(segment) && segment !== '..')) {
+    return NextResponse.json({ message: 'Not found' }, { status: 404 });
+  }
+
+  const apiPath = segments.join('/');
   const allowed = ALLOWED_ROUTES[request.method]?.some((pattern) => pattern.test(apiPath));
   if (!allowed) {
     return NextResponse.json({ message: 'Not found' }, { status: 404 });

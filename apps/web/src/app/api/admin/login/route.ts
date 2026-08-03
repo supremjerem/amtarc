@@ -15,6 +15,17 @@ export async function POST(request: NextRequest) {
     body: JSON.stringify({ email: body.email, password: body.password }),
     cache: 'no-store',
   });
+  // Rate limiting must not be reported as bad credentials, or an admin locked
+  // out by repeated attempts would keep retrying a password that is correct.
+  if (upstream.status === 429) {
+    const response = NextResponse.json(
+      { message: 'Too many attempts, please try again later' },
+      { status: 429 },
+    );
+    const retryAfter = upstream.headers.get('retry-after');
+    if (retryAfter) response.headers.set('retry-after', retryAfter);
+    return response;
+  }
   if (!upstream.ok) {
     return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
   }
