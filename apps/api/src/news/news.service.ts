@@ -91,9 +91,7 @@ export class NewsService {
         body: JSON.stringify({ secret, tag: 'news' }),
       });
     } catch (error) {
-      this.logger.warn(
-        `Failed to notify web app for revalidation: ${String(error)}`,
-      );
+      this.logger.warn(`Failed to notify web app for revalidation: ${String(error)}`);
     }
   }
 }

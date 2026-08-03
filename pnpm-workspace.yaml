@@ -1,6 +1,6 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - 'apps/*'
+  - 'packages/*'
 
 allowBuilds:
   '@prisma/engines': true
@@ -13,8 +13,8 @@ allowBuilds:
 onlyBuiltDependencies:
   - sharp
   - unrs-resolver
-  - "@prisma/client"
-  - "@prisma/engines"
+  - '@prisma/client'
+  - '@prisma/engines'
   - prisma
   - bcrypt
   - esbuild
