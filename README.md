@@ -53,6 +53,7 @@ pnpm dev
 - `pnpm dev` — run `apps/web` and `apps/api` concurrently.
 - `pnpm build` — production build both apps.
 - `pnpm lint` — lint both apps.
+- `pnpm typecheck` — type-check both apps without emitting.
 - `pnpm test` — run every workspace test suite.
 - `pnpm format` / `pnpm format:check` — Prettier over the whole repo.
 - `pnpm db:migrate` / `pnpm db:seed` / `pnpm db:studio` — Prisma commands scoped to `apps/api`.
@@ -96,8 +97,12 @@ Planned:
 - [ ] Continuous deployment once a hosting target is chosen (staging → production via GitHub Environments)
 - [ ] Shared `packages/` workspace for API/web DTO types
 - [ ] Raise the API coverage threshold as controller/guard tests land
-- [ ] Major dependency migrations deferred from Dependabot (breaking, need dedicated passes):
-      ESLint 10, TypeScript 7
+- [ ] ESLint 10 — blocked upstream: `eslint-plugin-react` (pulled in by `eslint-config-next`) still
+      calls APIs removed in ESLint 10, and ESLint 10's `no-useless-assignment` false-positives on
+      NestJS decorator metadata. Revisit when `eslint-config-next` supports ESLint 10.
+- [ ] TypeScript 7 — blocked upstream: TS 7.0 ships only the `tsc` binary, with no programmatic
+      compiler API, so the Nest CLI cannot build. Microsoft expects the API back in 7.1; the repo
+      runs TypeScript 6 in the meantime.
 
 ## License
 

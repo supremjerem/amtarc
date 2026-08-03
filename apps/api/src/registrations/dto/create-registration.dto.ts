@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Division, ShooterCategory } from '../../../generated/prisma/client';
+import { Division, ShooterCategory } from '../../generated/prisma/client';
 
 export class CreateRegistrationDto {
   @IsString()

@@ -11,9 +11,13 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "target": "ES2023",
+    // TypeScript 6 no longer auto-includes every @types package.
+    "types": ["node", "jest"],
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    // TypeScript 6 requires an explicit rootDir; "./src" preserves the existing
+    // dist/main.js layout that start:prod expects.
+    "rootDir": "./src",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -21,5 +25,9 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  // tsconfig.build.json narrows this to src for emit; test/ is included here
+  // so editors and ESLint type-check the e2e suite too.
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["dist", "node_modules", "prisma", "prisma.config.ts"]
 }

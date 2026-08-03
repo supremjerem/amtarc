@@ -16,7 +16,7 @@ apps/web/out/
 apps/api/dist/
 
 # prisma
-apps/api/generated/
+apps/api/src/generated/
 
 # logs
 *.log

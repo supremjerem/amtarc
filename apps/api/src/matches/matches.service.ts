@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { RegistrationStatus } from '../../generated/prisma/client';
+import { RegistrationStatus } from '../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { RevalidateService } from '../revalidate/revalidate.service';
 import { CreateMatchDto } from './dto/create-match.dto';

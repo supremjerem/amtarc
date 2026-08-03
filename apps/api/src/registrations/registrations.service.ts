@@ -17,7 +17,7 @@ import {
   type Match,
   type Prisma,
   type Registration,
-} from '../../generated/prisma/client';
+} from '../generated/prisma/client';
 
 // Statuses that hold a spot against squad capacity.
 const ACTIVE_STATUSES: RegistrationStatus[] = [
