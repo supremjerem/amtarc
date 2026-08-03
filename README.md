@@ -87,8 +87,9 @@ Done:
 
 Planned:
 
-- [ ] Match booking system: squad selection and online payment (Stripe), replacing the current
-      wait-list/bank-transfer process on ipsc.fftir.org
+- [ ] Match booking system: online registration with "shoot with" squadding preferences and an
+      auto-squadding proposal (~12 per squad), bank-transfer payment tracked per match, federation
+      export for Level 2/3 — see [docs/match-booking-plan.md](docs/match-booking-plan.md)
 - [ ] Transactional emails (booking confirmations, admin notifications)
 - [ ] Continuous deployment once a hosting target is chosen (staging → production via GitHub Environments)
 - [ ] Shared `packages/` workspace for API/web DTO types
