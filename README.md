@@ -1,6 +1,6 @@
 # AMTARC — website monorepo
 
-![AMTARC homepage screenshot](screenshot.jpg)
+![AMTARC homepage screenshot](docs/screenshot.jpg)
 
 Website for **AMTARC** (Association Meauzacaise de Tireurs aux Armes Rayées et de Chasse), a sports-shooting club in Meauzac (Tarn-et-Garonne, France).
 
@@ -8,11 +8,13 @@ Rebuilt from a Claude Design HTML prototype into a real, maintainable stack.
 
 ## Stack
 
-- **`apps/web`** — Next.js 15 (App Router), TypeScript, Tailwind CSS v4, Motion (Framer Motion).
+- **`apps/web`** — Next.js 16 (App Router), TypeScript, Tailwind CSS v4, Motion (Framer Motion).
 - **`apps/api`** — NestJS, TypeScript, Prisma + PostgreSQL, JWT auth.
 - pnpm workspaces monorepo (no Turborepo/Nx — not needed at this scale).
 
 The public site is statically generated with a 5-minute ISR safety net; the API pings a `/api/revalidate` webhook on every news write for near-instant updates without full rebuilds.
+
+Admin authentication uses an httpOnly cookie held by a Next.js BFF proxy (`/api/admin/*`) that forwards requests to the API server-side — the JWT is never exposed to browser JavaScript. See [ADR 0001](docs/adr/0001-admin-auth-httponly-cookie-bff.md).
 
 ## Requirements
 
@@ -51,17 +53,47 @@ pnpm dev
 - `pnpm dev` — run `apps/web` and `apps/api` concurrently.
 - `pnpm build` — production build both apps.
 - `pnpm lint` — lint both apps.
+- `pnpm test` — run every workspace test suite.
+- `pnpm format` / `pnpm format:check` — Prettier over the whole repo.
 - `pnpm db:migrate` / `pnpm db:seed` / `pnpm db:studio` — Prisma commands scoped to `apps/api`.
 
 ## Project structure
 
 ```
 apps/
-  web/    Next.js site (public pages + /admin back-office)
+  web/    Next.js site (public pages + /admin back-office + BFF auth proxy)
   api/    NestJS API (news CRUD + JWT auth)
+docs/
+  adr/    architecture decision records
+.github/  CI (lint, tests, build), CodeQL, Dependabot
 docker-compose.yml   local Postgres for development
 ```
 
+## Development workflow
+
+- `main` is protected and always deployable; day-to-day work happens on `develop` (or feature branches based on it) and reaches `main` through reviewed pull requests with green CI.
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org) (`feat:`, `fix:`, `test:`, `docs:`, …).
+
 ## Roadmap
 
-The `news` module (public listing + admin CRUD) is the first backend module. Future modules — match booking, Stripe payments, transactional emails — are expected to be added as additional NestJS modules alongside it, without restructuring the existing code.
+Done:
+
+- [x] Public site (Next.js, ISR + revalidation webhook)
+- [x] News module: public listing + admin CRUD (NestJS, Prisma)
+- [x] Admin auth hardening: httpOnly cookie via BFF proxy, middleware gating ([ADR 0001](docs/adr/0001-admin-auth-httponly-cookie-bff.md))
+- [x] Test foundation: API unit + e2e (Jest), web (Vitest + Testing Library), coverage floor
+- [x] CI (GitHub Actions), CodeQL, Dependabot; protected `main` + `develop` workflow
+
+Planned:
+
+- [ ] Admin panel v2: manage site content and images beyond news articles
+- [ ] Match booking system: squad selection and online payment (Stripe), replacing the current
+      wait-list/bank-transfer process on ipsc.fftir.org
+- [ ] Transactional emails (booking confirmations, admin notifications)
+- [ ] Continuous deployment once a hosting target is chosen (staging → production via GitHub Environments)
+- [ ] Shared `packages/` workspace for API/web DTO types
+- [ ] Raise the API coverage threshold as controller/guard tests land
+
+## License
+
+© AMTARC. All rights reserved. The source is public for transparency; it is not licensed for reuse.
