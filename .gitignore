@@ -39,3 +39,6 @@ apps/api/uploads/
 
 # test coverage reports (generated)
 coverage/
+
+# TypeScript incremental build cache
+*.tsbuildinfo
