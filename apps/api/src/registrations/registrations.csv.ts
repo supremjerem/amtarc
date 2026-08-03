@@ -65,11 +65,12 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 function escapeCell(value: string): string {
-  // Quote whenever the value could break the row, and double inner quotes.
-  // A leading =, +, - or @ is prefixed with a quote so spreadsheets treat the
-  // cell as text rather than a formula.
-  const guarded = /^[=+\-@]/.test(value) ? `'${value}` : value;
-  return /[";\n\r]/.test(guarded) ? `"${guarded.replace(/"/g, '""')}"` : guarded;
+  // Registration fields come from an unauthenticated form and end up in an
+  // organizer's spreadsheet, so neutralize every prefix a spreadsheet reads as
+  // a formula — =, +, -, @ and the tab/carriage-return variants that slip past
+  // a naive check — then quote anything that could break the row.
+  const guarded = /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+  return /[";\n\r\t]/.test(guarded) ? `"${guarded.replace(/"/g, '""')}"` : guarded;
 }
 
 function formatDate(date: Date | null): string {
