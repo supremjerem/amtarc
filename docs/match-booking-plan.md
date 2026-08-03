@@ -103,6 +103,11 @@ squad assignment published. Provider with an EU presence (Brevo or Resend).
    logic with automatic promotion on cancellation, public registration form and
    status lookup, admin registrations board (mark paid / cancel), and a MailService
    (log driver by default, Resend via `MAIL_DRIVER=resend` + `RESEND_API_KEY`).
-3. Squadding algorithm + squadding board + wait-list automation.
+3. ✅ Squadding algorithm + squadding board. Shipped 2026-08: pure proposal
+   algorithm (accent/case/word-order-insensitive name matching, union-find
+   grouping of transitive requests, oversized-group splitting, best-fit packing
+   into target sizes), JWT-guarded proposal/apply endpoints, an admin board with
+   per-squad columns and manual overrides, and FFTir-style public squad rosters
+   (names and divisions only). Wait-list automation shipped with phase 2.
 4. Federation export (Level 2/3). Optional later: online payment if a workable
    per-club setup appears (e.g. Stripe Connect routing to host clubs).
