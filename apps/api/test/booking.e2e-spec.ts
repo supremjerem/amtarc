@@ -29,7 +29,13 @@ describe('Booking flow (e2e)', () => {
     await app.init();
     prisma = app.get(PrismaService);
 
-    const login = await request(app.getHttpServer()).post('/auth/login').send(admin).expect(201);
+    const login = await request(app.getHttpServer()).post('/auth/login').send(admin);
+    if (login.status !== 201) {
+      throw new Error(
+        `Could not authenticate as ${admin.email} (status ${login.status}). ` +
+          'Run `pnpm db:seed` so the admin account exists before the e2e suite.',
+      );
+    }
     token = (login.body as { accessToken: string }).accessToken;
 
     const match = await request(app.getHttpServer())

@@ -78,6 +78,10 @@ jobs:
       - name: Apply database migrations
         run: pnpm --filter api exec prisma migrate deploy
 
+      # The e2e suite authenticates as the seeded admin.
+      - name: Seed the database
+        run: pnpm --filter api exec prisma db seed
+
       - name: Run API e2e tests
         run: pnpm --filter api test:e2e
 
