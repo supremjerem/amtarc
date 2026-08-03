@@ -1,4 +1,17 @@
-import { Body, Controller, Get, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Header,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import type { Response } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RegistrationsService } from './registrations.service';
 import { ApplySquaddingDto } from './dto/apply-squadding.dto';
@@ -22,6 +35,15 @@ export class RegistrationsController {
   @Get('matches/:matchId/registrations')
   listByMatch(@Param('matchId') matchId: string) {
     return this.registrationsService.listByMatch(matchId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('matches/:matchId/registrations/export')
+  @Header('content-type', 'text/csv; charset=utf-8')
+  async exportCsv(@Param('matchId') matchId: string, @Res({ passthrough: true }) res: Response) {
+    const { fileName, csv } = await this.registrationsService.exportCsv(matchId);
+    res.setHeader('content-disposition', `attachment; filename="${fileName}"`);
+    return csv;
   }
 
   @UseGuards(JwtAuthGuard)

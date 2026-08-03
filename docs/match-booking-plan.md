@@ -109,5 +109,19 @@ squad assignment published. Provider with an EU presence (Brevo or Resend).
    into target sizes), JWT-guarded proposal/apply endpoints, an admin board with
    per-squad columns and manual overrides, and FFTir-style public squad rosters
    (names and divisions only). Wait-list automation shipped with phase 2.
-4. Federation export (Level 2/3). Optional later: online payment if a workable
-   per-club setup appears (e.g. Stripe Connect routing to host clubs).
+4. ✅ Federation export (Level 2/3). Shipped 2026-08: guarded CSV export of a
+   match's active registrations (cancelled entries are never reported), ordered
+   by squad, downloadable from the admin registrations page.
+
+   **The exact FFTir import format is still unknown** — no template was
+   available when this was built. The export therefore mirrors the columns
+   their public squad lists display (squad, name, licence, division, category,
+   club, region) plus the fields organizers need for reconciliation (email,
+   status, transfer reference, paid-on date), as a CSV that opens cleanly in
+   French Excel: UTF-8 BOM, semicolon delimiter, CRLF rows, quoted cells, and
+   leading `=`/`+`/`-`/`@` neutralized against formula injection. When the real
+   format surfaces, only `COLUMNS` and the row mapping in
+   `apps/api/src/registrations/registrations.csv.ts` should need changing.
+
+Optional later: online payment if a workable per-club setup appears (e.g.
+Stripe Connect routing to host clubs).
