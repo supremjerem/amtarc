@@ -6,12 +6,14 @@ export type NavLink = {
   label: string;
 };
 
+// Root-relative anchors so the nav also works from /matchs and other routes.
 export const navLinks: NavLink[] = [
-  { href: '#club', label: 'Le club' },
-  { href: '#disciplines', label: 'Disciplines' },
-  { href: '#tsv', label: 'TSV' },
-  { href: '#actus', label: 'Actualités' },
-  { href: '#infos', label: 'Infos pratiques' },
+  { href: '/#club', label: 'Le club' },
+  { href: '/#disciplines', label: 'Disciplines' },
+  { href: '/#tsv', label: 'TSV' },
+  { href: '/matchs', label: 'Matchs' },
+  { href: '/#actus', label: 'Actualités' },
+  { href: '/#infos', label: 'Infos pratiques' },
 ];
 
 export type SocialPlatform = 'facebook' | 'instagram' | 'tiktok' | 'youtube';

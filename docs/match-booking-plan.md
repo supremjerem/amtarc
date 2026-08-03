@@ -93,7 +93,10 @@ squad assignment published. Provider with an EU presence (Brevo or Resend).
 
 ## Rollout phases
 
-1. Data model + admin match/squad CRUD + public match listing.
+1. ✅ Data model + admin match/squad CRUD + public match listing (`/matchs`). Shipped
+   2026-08: `Match`/`Squad` models, `matches` API module (public list/detail hiding
+   drafts, guarded CRUD, transactional squad replacement), admin match forms with a
+   squad editor, ISR pages revalidated via the `matches` tag.
 2. Registration with squad requests, bank-transfer instructions, admin payment
    confirmation, emails.
 3. Squadding algorithm + squadding board + wait-list automation.

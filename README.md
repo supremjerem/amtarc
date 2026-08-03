@@ -87,7 +87,7 @@ Done:
 
 Planned:
 
-- [ ] Match booking system: online registration with "shoot with" squadding preferences and an
+- [ ] Match booking system (phase 1 done: matches/squads CRUD + public /matchs pages): online registration with "shoot with" squadding preferences and an
       auto-squadding proposal (~12 per squad), bank-transfer payment tracked per match, federation
       export for Level 2/3 — see [docs/match-booking-plan.md](docs/match-booking-plan.md)
 - [ ] Transactional emails (booking confirmations, admin notifications)

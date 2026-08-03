@@ -5,6 +5,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { NewsModule } from './news/news.module';
 import { AuthModule } from './auth/auth.module';
 import { ContentModule } from './content/content.module';
+import { MatchesModule } from './matches/matches.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { AppController } from './app.controller';
 
@@ -18,6 +19,7 @@ import { AppController } from './app.controller';
     NewsModule,
     AuthModule,
     ContentModule,
+    MatchesModule,
     UploadsModule,
   ],
   controllers: [AppController],
