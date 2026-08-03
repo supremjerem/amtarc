@@ -17,7 +17,7 @@
     "db:studio": "pnpm --filter api exec prisma studio"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0",
+    "concurrently": "^10.0.4",
     "prettier": "^3.9.6"
   }
 }
