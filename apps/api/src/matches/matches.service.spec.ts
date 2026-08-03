@@ -84,6 +84,31 @@ describe('MatchesService', () => {
     });
   });
 
+  it('should expose only non-sensitive roster fields publicly', async () => {
+    prisma.match.findUnique.mockResolvedValue(match);
+
+    await service.findOnePublic('match-1');
+
+    const { select } = (
+      prisma.match.findUnique.mock.calls[0][0] as {
+        include: { registrations: { select: Record<string, boolean> } };
+      }
+    ).include.registrations;
+
+    expect(Object.keys(select).sort()).toEqual([
+      'category',
+      'division',
+      'firstName',
+      'id',
+      'lastName',
+      'squadId',
+    ]);
+    // Payment state and contact details stay out of the public roster.
+    for (const field of ['status', 'paidAt', 'email', 'licenceNumber', 'reference']) {
+      expect(select[field]).toBeUndefined();
+    }
+  });
+
   it('should hide unpublished matches from the public detail endpoint', async () => {
     prisma.match.findUnique.mockResolvedValue({ ...match, published: false });
 

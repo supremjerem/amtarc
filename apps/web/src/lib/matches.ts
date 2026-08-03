@@ -24,7 +24,8 @@ export type Match = {
   paymentInstructions: string | null;
   squads: Squad[];
   _count?: { registrations: number };
-  // Public roster (detail endpoint only): safe fields, active registrations.
+  // Public roster (detail endpoint only): active registrations, without
+  // contact details or payment status.
   registrations?: {
     id: string;
     firstName: string;
@@ -32,7 +33,6 @@ export type Match = {
     division: string;
     category: string;
     squadId: string | null;
-    status: string;
   }[];
 };
 
