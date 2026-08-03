@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main, develop]
 
+# CI only needs to read the repository; nothing here writes back to GitHub.
+permissions:
+  contents: read
+
 jobs:
   ci:
     runs-on: ubuntu-latest
