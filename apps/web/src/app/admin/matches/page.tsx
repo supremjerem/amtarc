@@ -67,6 +67,12 @@ export default function AdminMatchesPage() {
                 Inscriptions
               </Link>
               <Link
+                href={`/admin/matches/${item.id}/squadding`}
+                className="text-ink-secondary hover:text-ink"
+              >
+                Squadding
+              </Link>
+              <Link
                 href={`/admin/matches/${item.id}/edit`}
                 className="text-ink-secondary hover:text-ink"
               >

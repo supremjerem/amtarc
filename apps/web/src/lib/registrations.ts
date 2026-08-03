@@ -58,6 +58,7 @@ export type RegistrationInput = {
 export type Registration = {
   id: string;
   reference: string;
+  squadId: string | null;
   firstName: string;
   lastName: string;
   email: string;
@@ -118,6 +119,27 @@ export async function lookupRegistration(reference: string, email: string): Prom
 
 export async function listMatchRegistrations(matchId: string): Promise<Registration[]> {
   return parseOrThrow(await adminFetch(`/matches/${matchId}/registrations`));
+}
+
+export type SquaddingProposal = {
+  assignments: { squadId: string; registrationIds: string[] }[];
+  unassigned: string[];
+};
+
+export async function getSquaddingProposal(matchId: string): Promise<SquaddingProposal> {
+  return parseOrThrow(await adminFetch(`/matches/${matchId}/squadding/proposal`));
+}
+
+export async function applySquadding(
+  matchId: string,
+  assignments: { registrationId: string; squadId: string | null }[],
+): Promise<Registration[]> {
+  return parseOrThrow(
+    await adminFetch(`/matches/${matchId}/squadding`, {
+      method: 'PUT',
+      body: JSON.stringify({ assignments }),
+    }),
+  );
 }
 
 export async function markRegistrationPaid(id: string): Promise<void> {

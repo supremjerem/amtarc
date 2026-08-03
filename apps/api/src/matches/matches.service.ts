@@ -40,7 +40,27 @@ export class MatchesService {
   async findOnePublic(id: string) {
     const match = await this.prisma.match.findUnique({
       where: { id },
-      include: { ...squadsOrdered, ...activeRegistrationsCount },
+      include: {
+        ...squadsOrdered,
+        ...activeRegistrationsCount,
+        // Public roster, FFTir-style: names and divisions only — no contact
+        // or licence data.
+        registrations: {
+          where: {
+            status: { in: [RegistrationStatus.AWAITING_PAYMENT, RegistrationStatus.CONFIRMED] },
+          },
+          orderBy: { createdAt: 'asc' },
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            division: true,
+            category: true,
+            squadId: true,
+            status: true,
+          },
+        },
+      },
     });
     if (!match || !match.published) throw new NotFoundException(`Match "${id}" not found`);
     return match;

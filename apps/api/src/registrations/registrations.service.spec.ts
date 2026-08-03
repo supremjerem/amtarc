@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, NotFoundException } from '@nest
 import { Test } from '@nestjs/testing';
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { RevalidateService } from '../revalidate/revalidate.service';
 import { RegistrationsService } from './registrations.service';
 import type { CreateRegistrationDto } from './dto/create-registration.dto';
 
@@ -65,6 +66,7 @@ describe('RegistrationsService', () => {
         RegistrationsService,
         { provide: PrismaService, useValue: prisma },
         { provide: MailService, useValue: { send: sendMock } },
+        { provide: RevalidateService, useValue: { notify: jest.fn() } },
       ],
     }).compile();
 
@@ -214,6 +216,53 @@ describe('RegistrationsService', () => {
       await service.cancel('reg-3');
 
       expect(prisma.registration.findFirst).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('applySquadding', () => {
+    it('rejects squads that belong to another match', async () => {
+      prisma.match.findUnique.mockResolvedValue({ ...match, squads: [{ id: 's1' }] });
+
+      await expect(
+        service.applySquadding('match-1', {
+          assignments: [{ registrationId: 'reg-1', squadId: 'other-squad' }],
+        }),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it('rejects registrations that belong to another match', async () => {
+      prisma.match.findUnique.mockResolvedValue({ ...match, squads: [{ id: 's1' }] });
+      prisma.registration.count.mockResolvedValue(0);
+
+      await expect(
+        service.applySquadding('match-1', {
+          assignments: [{ registrationId: 'foreign-reg', squadId: 's1' }],
+        }),
+      ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it('updates assignments transactionally (null clears the squad)', async () => {
+      prisma.match.findUnique.mockResolvedValue({ ...match, squads: [{ id: 's1' }] });
+      prisma.registration.count.mockResolvedValue(2);
+      prisma.registration.findMany.mockResolvedValue([]);
+      prisma.$transaction.mockResolvedValue([]);
+
+      await service.applySquadding('match-1', {
+        assignments: [
+          { registrationId: 'reg-1', squadId: 's1' },
+          { registrationId: 'reg-2', squadId: null },
+        ],
+      });
+
+      expect(prisma.$transaction).toHaveBeenCalled();
+      expect(prisma.registration.update).toHaveBeenCalledWith({
+        where: { id: 'reg-1' },
+        data: { squadId: 's1' },
+      });
+      expect(prisma.registration.update).toHaveBeenCalledWith({
+        where: { id: 'reg-2' },
+        data: { squadId: null },
+      });
     });
   });
 

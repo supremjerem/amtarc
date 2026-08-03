@@ -7,7 +7,10 @@ import {
 } from '@nestjs/common';
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { RevalidateService } from '../revalidate/revalidate.service';
+import { ApplySquaddingDto } from './dto/apply-squadding.dto';
 import { CreateRegistrationDto } from './dto/create-registration.dto';
+import { buildSquaddingProposal } from './squadding';
 import {
   RegistrationStatus,
   type Match,
@@ -46,6 +49,7 @@ export class RegistrationsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mail: MailService,
+    private readonly revalidate: RevalidateService,
   ) {}
 
   async register(matchId: string, dto: CreateRegistrationDto) {
@@ -162,6 +166,63 @@ export class RegistrationsService {
     });
     if (freedSpot) await this.promoteOldestWaitlisted(registration.matchId);
     return cancelled;
+  }
+
+  async buildProposal(matchId: string) {
+    const match = await this.prisma.match.findUnique({
+      where: { id: matchId },
+      include: { squads: { orderBy: { position: 'asc' } } },
+    });
+    if (!match) throw new NotFoundException(`Match "${matchId}" not found`);
+
+    const registrations = await this.prisma.registration.findMany({
+      where: { matchId, status: { in: ACTIVE_STATUSES } },
+      orderBy: { createdAt: 'asc' },
+      include: { squadRequests: true },
+    });
+    return buildSquaddingProposal(
+      registrations.map((registration) => ({
+        id: registration.id,
+        firstName: registration.firstName,
+        lastName: registration.lastName,
+        createdAt: registration.createdAt,
+        requestedNames: registration.squadRequests.map((request) => request.requestedName),
+      })),
+      match.squads,
+    );
+  }
+
+  async applySquadding(matchId: string, dto: ApplySquaddingDto) {
+    const match = await this.prisma.match.findUnique({
+      where: { id: matchId },
+      include: { squads: true },
+    });
+    if (!match) throw new NotFoundException(`Match "${matchId}" not found`);
+
+    const validSquadIds = new Set(match.squads.map((squad) => squad.id));
+    for (const assignment of dto.assignments) {
+      if (assignment.squadId && !validSquadIds.has(assignment.squadId)) {
+        throw new BadRequestException(`Unknown squad "${assignment.squadId}" for this match`);
+      }
+    }
+    const registrationIds = dto.assignments.map((assignment) => assignment.registrationId);
+    const known = await this.prisma.registration.count({
+      where: { id: { in: registrationIds }, matchId },
+    });
+    if (known !== new Set(registrationIds).size) {
+      throw new BadRequestException('Some registrations do not belong to this match');
+    }
+
+    await this.prisma.$transaction(
+      dto.assignments.map((assignment) =>
+        this.prisma.registration.update({
+          where: { id: assignment.registrationId },
+          data: { squadId: assignment.squadId ?? null },
+        }),
+      ),
+    );
+    await this.revalidate.notify('matches');
+    return this.listByMatch(matchId);
   }
 
   private async promoteOldestWaitlisted(matchId: string) {

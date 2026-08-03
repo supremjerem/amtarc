@@ -109,20 +109,48 @@ export default async function MatchDetailPage({ params }: PageProps) {
                       <th className="px-5 py-3">JOUR</th>
                       <th className="px-5 py-3">DÉPART</th>
                       <th className="px-5 py-3">PLACES</th>
+                      <th className="px-5 py-3">TIREURS</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {match.squads.map((squad) => (
-                      <tr key={squad.id} className="border-b border-ink/5 last:border-0">
-                        <td className="px-5 py-3 font-semibold">{squad.label}</td>
-                        <td className="px-5 py-3 capitalize">{formatDay(squad.day)}</td>
-                        <td className="px-5 py-3">{squad.startTime}</td>
-                        <td className="px-5 py-3">{squad.targetSize}</td>
-                      </tr>
-                    ))}
+                    {match.squads.map((squad) => {
+                      const shooters = (match.registrations ?? []).filter(
+                        (registration) => registration.squadId === squad.id,
+                      );
+                      return (
+                        <tr
+                          key={squad.id}
+                          className="border-b border-ink/5 align-top last:border-0"
+                        >
+                          <td className="px-5 py-3 font-semibold">{squad.label}</td>
+                          <td className="px-5 py-3 capitalize">{formatDay(squad.day)}</td>
+                          <td className="px-5 py-3">{squad.startTime}</td>
+                          <td className="px-5 py-3">
+                            {shooters.length} / {squad.targetSize}
+                          </td>
+                          <td className="px-5 py-3 text-ink-soft">
+                            {shooters
+                              .map(
+                                (registration) =>
+                                  `${registration.firstName} ${registration.lastName}`,
+                              )
+                              .join(', ') || '—'}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
+              {(match.registrations ?? []).some((registration) => !registration.squadId) && (
+                <p className="-mt-6 mb-10 text-sm text-ink-soft">
+                  En attente de squad :{' '}
+                  {(match.registrations ?? [])
+                    .filter((registration) => !registration.squadId)
+                    .map((registration) => `${registration.firstName} ${registration.lastName}`)
+                    .join(', ')}
+                </p>
+              )}
             </>
           )}
 

@@ -24,6 +24,16 @@ export type Match = {
   paymentInstructions: string | null;
   squads: Squad[];
   _count?: { registrations: number };
+  // Public roster (detail endpoint only): safe fields, active registrations.
+  registrations?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    division: string;
+    category: string;
+    squadId: string | null;
+    status: string;
+  }[];
 };
 
 export function matchCapacity(match: Pick<Match, 'squads'>): number | null {
