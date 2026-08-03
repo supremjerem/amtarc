@@ -1,6 +1,6 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { RevalidateService } from '../revalidate/revalidate.service';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
 
@@ -16,11 +16,9 @@ function slugify(title: string): string {
 
 @Injectable()
 export class NewsService {
-  private readonly logger = new Logger(NewsService.name);
-
   constructor(
     private readonly prisma: PrismaService,
-    private readonly config: ConfigService,
+    private readonly revalidate: RevalidateService,
   ) {}
 
   findPublished() {
@@ -51,7 +49,7 @@ export class NewsService {
     const created = await this.prisma.news.create({
       data: { ...dto, slug },
     });
-    await this.notifyRevalidate();
+    await this.revalidate.notify('news');
     return created;
   }
 
@@ -60,13 +58,13 @@ export class NewsService {
       where: { id },
       data: dto,
     });
-    await this.notifyRevalidate();
+    await this.revalidate.notify('news');
     return updated;
   }
 
   async remove(id: string) {
     const removed = await this.prisma.news.delete({ where: { id } });
-    await this.notifyRevalidate();
+    await this.revalidate.notify('news');
     return removed;
   }
 
@@ -79,21 +77,5 @@ export class NewsService {
       suffix += 1;
     }
     return candidate;
-  }
-
-  private async notifyRevalidate() {
-    const url = this.config.get<string>('WEB_REVALIDATE_URL');
-    const secret = this.config.get<string>('REVALIDATE_SECRET');
-    try {
-      await fetch(url!, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ secret, tag: 'news' }),
-      });
-    } catch (error) {
-      this.logger.warn(
-        `Failed to notify web app for revalidation: ${String(error)}`,
-      );
-    }
   }
 }

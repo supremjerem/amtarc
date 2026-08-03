@@ -1,11 +1,4 @@
-import {
-  IsBoolean,
-  IsEnum,
-  IsOptional,
-  IsString,
-  IsUrl,
-  MinLength,
-} from 'class-validator';
+import { IsBoolean, IsEnum, IsOptional, IsString, IsUrl, MinLength } from 'class-validator';
 import { NewsCategory } from '../../../generated/prisma/client';
 
 export class CreateNewsDto {

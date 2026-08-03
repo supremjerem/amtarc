@@ -2,9 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { setToken } from '@/lib/auth';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
+import { login } from '@/lib/auth';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -18,14 +16,8 @@ export default function AdminLoginPage() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await login(email, password);
       if (!response.ok) throw new Error('Identifiants invalides.');
-      const data = await response.json();
-      setToken(data.accessToken);
       router.replace('/admin/news');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue.');

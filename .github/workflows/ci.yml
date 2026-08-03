@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: amtarc
+          POSTGRES_PASSWORD: amtarc
+          POSTGRES_DB: amtarc
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U amtarc"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://amtarc:amtarc@localhost:5432/amtarc
+      JWT_SECRET: ci-only-secret
+      JWT_EXPIRES_IN: 1h
+      PORT: '3001'
+      CORS_ORIGIN: http://localhost:3000
+      ADMIN_EMAIL: admin@amtarc.test
+      ADMIN_PASSWORD: ci-only-password
+      WEB_REVALIDATE_URL: http://localhost:3000/api/revalidate
+      REVALIDATE_SECRET: ci-only-secret
+      API_URL: http://localhost:3001
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Generate Prisma client
+        run: pnpm --filter api exec prisma generate
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Run web tests
+        run: pnpm --filter web test
+
+      - name: Run API unit tests with coverage
+        run: pnpm --filter api test:cov
+
+      - name: Apply database migrations
+        run: pnpm --filter api exec prisma migrate deploy
+
+      - name: Run API e2e tests
+        run: pnpm --filter api test:e2e
+
+      - name: Build
+        run: pnpm build
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-coverage
+          path: apps/api/coverage
+          retention-days: 14

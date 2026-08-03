@@ -17,12 +17,8 @@ export class AuthService {
     });
     if (!admin) throw new UnauthorizedException('Invalid credentials');
 
-    const passwordMatches = await bcrypt.compare(
-      dto.password,
-      admin.passwordHash,
-    );
-    if (!passwordMatches)
-      throw new UnauthorizedException('Invalid credentials');
+    const passwordMatches = await bcrypt.compare(dto.password, admin.passwordHash);
+    if (!passwordMatches) throw new UnauthorizedException('Invalid credentials');
 
     const accessToken = await this.jwt.signAsync({
       sub: admin.id,

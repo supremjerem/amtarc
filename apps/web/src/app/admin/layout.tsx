@@ -1,39 +1,37 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { clearToken, getToken } from '@/lib/auth';
+import { logout } from '@/lib/auth';
 
 export default function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
   const router = useRouter();
-  const [ready, setReady] = useState(false);
-  const isLoginPage = pathname === '/admin/login';
 
-  useEffect(() => {
-    if (!isLoginPage && !getToken()) {
-      router.replace('/admin/login');
-      return;
-    }
-    // Gating protected content on a client-only localStorage check, not derived render state.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setReady(true);
-  }, [isLoginPage, router]);
-
-  if (isLoginPage) return children;
-  if (!ready) return null;
+  // Access gating happens in src/proxy.ts (cookie check) and in the API
+  // (JWT validation on every proxied request).
+  if (pathname === '/admin/login') return children;
 
   return (
     <div className="min-h-screen bg-cream-50 font-body text-ink">
       <header className="flex items-center justify-between border-b border-ink/10 bg-white px-8 py-4">
-        <Link href="/admin/news" className="font-display text-xl tracking-[0.03em]">
-          AMTARC · Admin
-        </Link>
+        <div className="flex items-center gap-8">
+          <Link href="/admin/news" className="font-display text-xl tracking-[0.03em]">
+            AMTARC · Admin
+          </Link>
+          <nav className="flex items-center gap-5 text-sm font-semibold text-ink-secondary">
+            <Link href="/admin/news" className="hover:text-ink">
+              Actualités
+            </Link>
+            <Link href="/admin/content" className="hover:text-ink">
+              Contenu du site
+            </Link>
+          </nav>
+        </div>
         <button
           type="button"
-          onClick={() => {
-            clearToken();
+          onClick={async () => {
+            await logout();
             router.replace('/admin/login');
           }}
           className="text-sm font-semibold text-ink-soft hover:text-ink"

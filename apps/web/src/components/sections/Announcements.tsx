@@ -1,11 +1,13 @@
 import Link from 'next/link';
-import { announcements } from '@/lib/content';
+import { announcements as defaultAnnouncements } from '@/lib/content';
 import { Container } from '@/components/ui/Container';
 import { HexagonPattern } from '@/components/ui/HexagonPattern';
 import { SectionKicker } from '@/components/ui/SectionKicker';
 import { Reveal } from '@/components/ui/Reveal';
 
-export function Announcements() {
+export function Announcements({
+  content: announcements = defaultAnnouncements,
+}: Readonly<{ content?: typeof defaultAnnouncements }>) {
   const { medicalCertificate, membership, merch, newsletter } = announcements;
 
   return (
