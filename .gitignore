@@ -42,3 +42,8 @@ coverage/
 
 # TypeScript incremental build cache
 *.tsbuildinfo
+
+# stray compiler output next to sources
+apps/api/**/*.js.map
+apps/api/prisma.config.d.ts
+apps/api/prisma/seed.d.ts
