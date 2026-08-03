@@ -121,6 +121,26 @@ export async function listMatchRegistrations(matchId: string): Promise<Registrat
   return parseOrThrow(await adminFetch(`/matches/${matchId}/registrations`));
 }
 
+// Reads the file name the API put in content-disposition, falling back to a
+// generic name if the header is missing.
+function fileNameFrom(response: Response, fallback: string): string {
+  const match = /filename="([^"]+)"/.exec(response.headers.get('content-disposition') ?? '');
+  return match ? match[1] : fallback;
+}
+
+export async function downloadRegistrationsCsv(matchId: string): Promise<void> {
+  const response = await adminFetch(`/matches/${matchId}/registrations/export`);
+  if (!response.ok) throw new Error(`Export failed with status ${response.status}`);
+
+  const blob = new Blob([await response.text()], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileNameFrom(response, 'inscriptions.csv');
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 export type SquaddingProposal = {
   assignments: { squadId: string; registrationIds: string[] }[];
   unassigned: string[];

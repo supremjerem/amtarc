@@ -7,6 +7,7 @@ import {
   cancelRegistration,
   CATEGORY_LABELS,
   DIVISION_LABELS,
+  downloadRegistrationsCsv,
   listMatchRegistrations,
   markRegistrationPaid,
   STATUS_LABELS,
@@ -53,9 +54,25 @@ export default function MatchRegistrationsPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="font-display text-2xl tracking-[0.02em]">Inscriptions</h1>
-        <Link href="/admin/matches" className="text-sm font-semibold text-ink-soft hover:text-ink">
-          ← Matchs
-        </Link>
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() =>
+              act(async () => {
+                await downloadRegistrationsCsv(params.id);
+              })
+            }
+            className="rounded-pill bg-gold-gradient px-5 py-2.5 text-sm font-extrabold text-ink"
+          >
+            Exporter en CSV
+          </button>
+          <Link
+            href="/admin/matches"
+            className="text-sm font-semibold text-ink-soft hover:text-ink"
+          >
+            ← Matchs
+          </Link>
+        </div>
       </div>
 
       {error && <p className="mb-4 text-sm font-semibold text-red-600">{error}</p>}

@@ -10,6 +10,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { RevalidateService } from '../revalidate/revalidate.service';
 import { ApplySquaddingDto } from './dto/apply-squadding.dto';
 import { CreateRegistrationDto } from './dto/create-registration.dto';
+import { buildRegistrationsCsv, exportFileName } from './registrations.csv';
 import { buildSquaddingProposal } from './squadding';
 import {
   RegistrationStatus,
@@ -166,6 +167,32 @@ export class RegistrationsService {
     });
     if (freedSpot) await this.promoteOldestWaitlisted(registration.matchId);
     return cancelled;
+  }
+
+  // Federation entry export: active registrations only (cancelled entries are
+  // never reported), squadded shooters first in squad order.
+  async exportCsv(matchId: string) {
+    const match = await this.prisma.match.findUnique({
+      where: { id: matchId },
+      include: { squads: { orderBy: { position: 'asc' } } },
+    });
+    if (!match) throw new NotFoundException(`Match "${matchId}" not found`);
+
+    const squadPositions = new Map(match.squads.map((squad, index) => [squad.id, index]));
+    const registrations = await this.prisma.registration.findMany({
+      where: { matchId, status: { in: ACTIVE_STATUSES } },
+      orderBy: { createdAt: 'asc' },
+    });
+    const ordered = [...registrations].sort(
+      (a, b) =>
+        (a.squadId ? (squadPositions.get(a.squadId) ?? 0) : Number.MAX_SAFE_INTEGER) -
+        (b.squadId ? (squadPositions.get(b.squadId) ?? 0) : Number.MAX_SAFE_INTEGER),
+    );
+
+    return {
+      fileName: exportFileName(match.title),
+      csv: buildRegistrationsCsv(ordered, match.squads),
+    };
   }
 
   async buildProposal(matchId: string) {

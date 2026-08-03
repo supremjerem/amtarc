@@ -13,6 +13,7 @@ const ALLOWED_ROUTES: Record<string, RegExp[]> = {
     /^matches\/admin\/[^/]+$/,
     /^matches\/[^/]+\/registrations$/,
     /^matches\/[^/]+\/squadding\/proposal$/,
+    /^matches\/[^/]+\/registrations\/export$/,
   ],
   POST: [/^news$/, /^uploads$/, /^matches$/],
   PUT: [/^content\/[a-z-]+$/, /^matches\/[^/]+\/squads$/, /^matches\/[^/]+\/squadding$/],
@@ -48,9 +49,18 @@ async function proxyRequest(request: NextRequest, context: RouteContext) {
     body,
     cache: 'no-store',
   });
-  return new NextResponse(await upstream.text(), {
+  const responseHeaders = new Headers({
+    'content-type': upstream.headers.get('content-type') ?? 'application/json',
+  });
+  // Carries the file name for downloads (CSV exports).
+  const disposition = upstream.headers.get('content-disposition');
+  if (disposition) responseHeaders.set('content-disposition', disposition);
+
+  // Forward raw bytes: decoding to text would strip the UTF-8 BOM that makes
+  // CSV exports open correctly in Excel.
+  return new NextResponse(await upstream.arrayBuffer(), {
     status: upstream.status,
-    headers: { 'content-type': upstream.headers.get('content-type') ?? 'application/json' },
+    headers: responseHeaders,
   });
 }
 

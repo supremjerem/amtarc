@@ -61,8 +61,8 @@ pnpm dev
 
 ```
 apps/
-  web/    Next.js site (public pages + /admin back-office + BFF auth proxy)
-  api/    NestJS API (news CRUD + JWT auth)
+  web/    Next.js site (public pages, /matchs, /admin back-office, BFF auth proxy)
+  api/    NestJS API (news, site content, uploads, matches, registrations, JWT auth)
 docs/
   adr/    architecture decision records
 .github/  CI (lint, tests, build), CodeQL, Dependabot
@@ -84,14 +84,15 @@ Done:
 - [x] Test foundation: API unit + e2e (Jest), web (Vitest + Testing Library), coverage floor
 - [x] CI (GitHub Actions), CodeQL, Dependabot; protected `main` + `develop` workflow
 - [x] Admin panel v2: edit site content sections (hero, announcements, practical info, contact) and upload news images
+- [x] Match booking system: match/squad catalog, online registration with "shoot with" wishes,
+      wait-list with auto-promotion, bank-transfer tracking, transactional emails, auto-squadding
+      proposal with an admin board, public squad rosters, and a CSV export for federation entry —
+      see [docs/match-booking-plan.md](docs/match-booking-plan.md)
 
 Planned:
 
-- [ ] Match booking system (phases 1–3 done: match/squad catalog, online registration with
-      "shoot with" wishes, wait-list with auto-promotion, bank-transfer tracking, emails,
-      auto-squadding proposal with an admin board and public squad rosters): next up the
-      federation export for Level 2/3 — see [docs/match-booking-plan.md](docs/match-booking-plan.md)
-- [ ] Transactional emails (booking confirmations, admin notifications)
+- [ ] Switch transactional email to a real provider in production (`MAIL_DRIVER=resend` + API key;
+      the log driver covers development)
 - [ ] Continuous deployment once a hosting target is chosen (staging → production via GitHub Environments)
 - [ ] Shared `packages/` workspace for API/web DTO types
 - [ ] Raise the API coverage threshold as controller/guard tests land
