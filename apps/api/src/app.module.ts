@@ -22,6 +22,9 @@ import { AppController } from './app.controller';
     // (login, registration, lookup) tighten it with their own @Throttle.
     ThrottlerModule.forRoot({
       throttlers: [{ name: 'default', ttl: seconds(60), limit: 120 }],
+      // The e2e suite issues far more requests than a human would; limits are
+      // configuration, and are verified against the running app instead.
+      skipIf: () => process.env.NODE_ENV === 'test',
     }),
     PrismaModule,
     NewsModule,
