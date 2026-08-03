@@ -1,10 +1,12 @@
 import Link from 'next/link';
-import { practicalInfo } from '@/lib/content';
+import { practicalInfo as defaultPracticalInfo } from '@/lib/content';
 import { Container } from '@/components/ui/Container';
 import { HexagonPattern } from '@/components/ui/HexagonPattern';
 import { Reveal } from '@/components/ui/Reveal';
 
-export function PracticalInfo() {
+export function PracticalInfo({
+  content: practicalInfo = defaultPracticalInfo,
+}: Readonly<{ content?: typeof defaultPracticalInfo }>) {
   return (
     <section id="infos" className="pt-5 pb-24">
       <Container className="grid grid-cols-1 gap-4 md:grid-cols-2">

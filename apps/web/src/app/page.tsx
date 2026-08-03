@@ -8,19 +8,22 @@ import { TsvShowcase } from '@/components/sections/TsvShowcase';
 import { NewsSection } from '@/components/sections/NewsSection';
 import { PracticalInfo } from '@/components/sections/PracticalInfo';
 import { Contact } from '@/components/sections/Contact';
+import { getSiteContent } from '@/lib/site-content';
 
-export default function Home() {
+export default async function Home() {
+  const content = await getSiteContent();
+
   return (
     <div className="relative w-full overflow-hidden bg-page-gradient">
       <Nav />
-      <Hero />
-      <Announcements />
+      <Hero content={content.hero} />
+      <Announcements content={content.announcements} />
       <ClubStats />
       <DisciplinesBento />
       <TsvShowcase />
       <NewsSection />
-      <PracticalInfo />
-      <Contact />
+      <PracticalInfo content={content['practical-info']} />
+      <Contact content={content.contact} />
       <Footer />
     </div>
   );

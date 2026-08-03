@@ -5,7 +5,10 @@ export const ADMIN_TOKEN_COOKIE = 'amtarc_admin_token';
 // See docs/adr/0001-admin-auth-httponly-cookie-bff.md.
 export async function adminFetch(path: string, options: RequestInit = {}): Promise<Response> {
   const headers = new Headers(options.headers);
-  if (options.body) headers.set('content-type', 'application/json');
+  // FormData sets its own multipart content-type (with boundary).
+  if (options.body && !(options.body instanceof FormData)) {
+    headers.set('content-type', 'application/json');
+  }
 
   const response = await fetch(`/api/admin${path}`, { ...options, cache: 'no-store', headers });
   if (response.status === 401 && typeof window !== 'undefined') {

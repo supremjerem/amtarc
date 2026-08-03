@@ -3,10 +3,11 @@ import { ADMIN_TOKEN_COOKIE } from '@/lib/auth';
 
 const API_URL = process.env.API_URL ?? 'http://localhost:3001';
 
-// Only the admin news endpoints may be proxied; anything else is a 404.
+// Only these admin endpoints may be proxied; anything else is a 404.
 const ALLOWED_ROUTES: Record<string, RegExp[]> = {
-  GET: [/^news\/admin$/, /^news\/admin\/[^/]+$/],
-  POST: [/^news$/],
+  GET: [/^news\/admin$/, /^news\/admin\/[^/]+$/, /^content$/],
+  POST: [/^news$/, /^uploads$/],
+  PUT: [/^content\/[a-z-]+$/],
   PATCH: [/^news\/[^/]+$/],
   DELETE: [/^news\/[^/]+$/],
 };
@@ -27,8 +28,11 @@ async function proxyRequest(request: NextRequest, context: RouteContext) {
 
   const headers = new Headers({ authorization: `Bearer ${token}` });
   const hasBody = request.method !== 'GET' && request.method !== 'DELETE';
-  const body = hasBody ? await request.text() : undefined;
-  if (body) headers.set('content-type', 'application/json');
+  // Forward bytes untouched (JSON and multipart alike); the original
+  // content-type header carries the multipart boundary.
+  const body = hasBody ? Buffer.from(await request.arrayBuffer()) : undefined;
+  const contentType = request.headers.get('content-type');
+  if (hasBody && contentType) headers.set('content-type', contentType);
 
   const upstream = await fetch(`${API_URL}/${apiPath}`, {
     method: request.method,
@@ -44,5 +48,6 @@ async function proxyRequest(request: NextRequest, context: RouteContext) {
 
 export const GET = proxyRequest;
 export const POST = proxyRequest;
+export const PUT = proxyRequest;
 export const PATCH = proxyRequest;
 export const DELETE = proxyRequest;

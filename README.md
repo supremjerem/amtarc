@@ -83,10 +83,10 @@ Done:
 - [x] Admin auth hardening: httpOnly cookie via BFF proxy, middleware gating ([ADR 0001](docs/adr/0001-admin-auth-httponly-cookie-bff.md))
 - [x] Test foundation: API unit + e2e (Jest), web (Vitest + Testing Library), coverage floor
 - [x] CI (GitHub Actions), CodeQL, Dependabot; protected `main` + `develop` workflow
+- [x] Admin panel v2: edit site content sections (hero, announcements, practical info, contact) and upload news images
 
 Planned:
 
-- [ ] Admin panel v2: manage site content and images beyond news articles
 - [ ] Match booking system: squad selection and online payment (Stripe), replacing the current
       wait-list/bank-transfer process on ipsc.fftir.org
 - [ ] Transactional emails (booking confirmations, admin notifications)

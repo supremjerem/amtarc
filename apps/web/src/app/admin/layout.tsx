@@ -15,9 +15,19 @@ export default function AdminLayout({ children }: Readonly<{ children: React.Rea
   return (
     <div className="min-h-screen bg-cream-50 font-body text-ink">
       <header className="flex items-center justify-between border-b border-ink/10 bg-white px-8 py-4">
-        <Link href="/admin/news" className="font-display text-xl tracking-[0.03em]">
-          AMTARC · Admin
-        </Link>
+        <div className="flex items-center gap-8">
+          <Link href="/admin/news" className="font-display text-xl tracking-[0.03em]">
+            AMTARC · Admin
+          </Link>
+          <nav className="flex items-center gap-5 text-sm font-semibold text-ink-secondary">
+            <Link href="/admin/news" className="hover:text-ink">
+              Actualités
+            </Link>
+            <Link href="/admin/content" className="hover:text-ink">
+              Contenu du site
+            </Link>
+          </nav>
+        </div>
         <button
           type="button"
           onClick={async () => {

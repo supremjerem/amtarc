@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { PrismaService } from '../prisma/prisma.service';
+import { RevalidateService } from '../revalidate/revalidate.service';
 import { NewsService } from './news.service';
 import type { CreateNewsDto } from './dto/create-news.dto';
 
@@ -30,7 +30,7 @@ describe('NewsService', () => {
       delete: jest.Mock;
     };
   };
-  let fetchMock: jest.Mock;
+  let notifyMock: jest.Mock;
 
   beforeEach(async () => {
     prisma = {
@@ -42,23 +42,13 @@ describe('NewsService', () => {
         delete: jest.fn(),
       },
     };
-    fetchMock = jest.fn().mockResolvedValue({ ok: true });
-    global.fetch = fetchMock;
+    notifyMock = jest.fn().mockResolvedValue(undefined);
 
     const moduleRef = await Test.createTestingModule({
       providers: [
         NewsService,
         { provide: PrismaService, useValue: prisma },
-        {
-          provide: ConfigService,
-          useValue: {
-            get: (key: string) =>
-              ({
-                WEB_REVALIDATE_URL: 'http://web.test/api/revalidate',
-                REVALIDATE_SECRET: 'test-secret',
-              })[key],
-          },
-        },
+        { provide: RevalidateService, useValue: { notify: notifyMock } },
       ],
     }).compile();
 
@@ -97,25 +87,13 @@ describe('NewsService', () => {
       });
     });
 
-    it('should notify the web app for revalidation', async () => {
+    it('should notify revalidation with the news tag', async () => {
       prisma.news.findUnique.mockResolvedValue(null);
       prisma.news.create.mockResolvedValue(newsItem);
 
       await service.create(dto);
 
-      expect(fetchMock).toHaveBeenCalledWith('http://web.test/api/revalidate', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ secret: 'test-secret', tag: 'news' }),
-      });
-    });
-
-    it('should not fail when the revalidation webhook is down', async () => {
-      prisma.news.findUnique.mockResolvedValue(null);
-      prisma.news.create.mockResolvedValue(newsItem);
-      fetchMock.mockRejectedValue(new Error('ECONNREFUSED'));
-
-      await expect(service.create(dto)).resolves.toEqual(newsItem);
+      expect(notifyMock).toHaveBeenCalledWith('news');
     });
   });
 
@@ -130,7 +108,7 @@ describe('NewsService', () => {
         where: { id: 'news-1' },
         data: { title: 'New title' },
       });
-      expect(fetchMock).toHaveBeenCalled();
+      expect(notifyMock).toHaveBeenCalledWith('news');
     });
   });
 
@@ -141,7 +119,7 @@ describe('NewsService', () => {
       await service.remove('news-1');
 
       expect(prisma.news.delete).toHaveBeenCalledWith({ where: { id: 'news-1' } });
-      expect(fetchMock).toHaveBeenCalled();
+      expect(notifyMock).toHaveBeenCalledWith('news');
     });
   });
 

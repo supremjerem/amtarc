@@ -1,12 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { contact } from '@/lib/content';
+import { contact as defaultContact } from '@/lib/content';
 import { Container } from '@/components/ui/Container';
 import { HexagonPattern } from '@/components/ui/HexagonPattern';
 import { SocialLinks } from '@/components/ui/SocialLinks';
 import { Reveal } from '@/components/ui/Reveal';
 
-export function Contact() {
+export function Contact({
+  content: contact = defaultContact,
+}: Readonly<{ content?: typeof defaultContact }>) {
   return (
     <section id="contact" className="mb-10">
       <Container>

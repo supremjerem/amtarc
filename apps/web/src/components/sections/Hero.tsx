@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { hero } from '@/lib/content';
+import { hero as defaultHero } from '@/lib/content';
 import { Container } from '@/components/ui/Container';
 import { HexagonPattern } from '@/components/ui/HexagonPattern';
 import { PillButton } from '@/components/ui/PillButton';
@@ -15,7 +15,7 @@ function CompassArm({ rotate }: Readonly<{ rotate: number }>) {
   );
 }
 
-export function Hero() {
+export function Hero({ content: hero = defaultHero }: Readonly<{ content?: typeof defaultHero }>) {
   return (
     <header
       id="top"

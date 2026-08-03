@@ -28,6 +28,15 @@ model News {
   updatedAt   DateTime     @updatedAt
 }
 
+// Editable site copy, one row per page section (hero, announcements, ...).
+// The web app merges stored sections over its built-in defaults, so rows
+// only exist for sections an admin has actually edited.
+model SiteContent {
+  key       String   @id
+  data      Json
+  updatedAt DateTime @updatedAt
+}
+
 model Admin {
   id           String   @id @default(cuid())
   email        String   @unique
