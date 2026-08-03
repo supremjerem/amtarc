@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { RegistrationStatus } from '../../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { RevalidateService } from '../revalidate/revalidate.service';
 import { CreateMatchDto } from './dto/create-match.dto';
@@ -6,6 +7,20 @@ import { ReplaceSquadsDto } from './dto/replace-squads.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 
 const squadsOrdered = { squads: { orderBy: { position: 'asc' as const } } };
+
+// Registrations holding a spot, surfaced on public endpoints as _count so the
+// site can show remaining places.
+const activeRegistrationsCount = {
+  _count: {
+    select: {
+      registrations: {
+        where: {
+          status: { in: [RegistrationStatus.AWAITING_PAYMENT, RegistrationStatus.CONFIRMED] },
+        },
+      },
+    },
+  },
+};
 
 @Injectable()
 export class MatchesService {
@@ -18,14 +33,14 @@ export class MatchesService {
     return this.prisma.match.findMany({
       where: { published: true },
       orderBy: { startDate: 'asc' },
-      include: squadsOrdered,
+      include: { ...squadsOrdered, ...activeRegistrationsCount },
     });
   }
 
   async findOnePublic(id: string) {
     const match = await this.prisma.match.findUnique({
       where: { id },
-      include: squadsOrdered,
+      include: { ...squadsOrdered, ...activeRegistrationsCount },
     });
     if (!match || !match.published) throw new NotFoundException(`Match "${id}" not found`);
     return match;

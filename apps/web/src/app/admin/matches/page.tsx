@@ -61,6 +61,12 @@ export default function AdminMatchesPage() {
             </div>
             <div className="flex items-center gap-4 text-sm font-semibold">
               <Link
+                href={`/admin/matches/${item.id}/registrations`}
+                className="text-ink-secondary hover:text-ink"
+              >
+                Inscriptions
+              </Link>
+              <Link
                 href={`/admin/matches/${item.id}/edit`}
                 className="text-ink-secondary hover:text-ink"
               >

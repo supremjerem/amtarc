@@ -23,7 +23,19 @@ export type Match = {
   paymentPayee: string | null;
   paymentInstructions: string | null;
   squads: Squad[];
+  _count?: { registrations: number };
 };
+
+export function matchCapacity(match: Pick<Match, 'squads'>): number | null {
+  if (match.squads.length === 0) return null;
+  return match.squads.reduce((total, squad) => total + squad.targetSize, 0);
+}
+
+export function remainingSpots(match: Pick<Match, 'squads' | '_count'>): number | null {
+  const capacity = matchCapacity(match);
+  if (capacity === null) return null;
+  return Math.max(0, capacity - (match._count?.registrations ?? 0));
+}
 
 const API_URL = process.env.API_URL ?? 'http://localhost:3001';
 

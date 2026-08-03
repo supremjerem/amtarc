@@ -11,6 +11,9 @@ export const envSchema = z.object({
   ADMIN_PASSWORD: z.string().min(1),
   WEB_REVALIDATE_URL: z.string().min(1),
   REVALIDATE_SECRET: z.string().min(1),
+  MAIL_DRIVER: z.enum(['log', 'resend']).default('log'),
+  MAIL_FROM: z.string().default('AMTARC <no-reply@amtarc.fr>'),
+  RESEND_API_KEY: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

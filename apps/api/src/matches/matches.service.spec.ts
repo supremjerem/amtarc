@@ -73,7 +73,14 @@ describe('MatchesService', () => {
     expect(prisma.match.findMany).toHaveBeenCalledWith({
       where: { published: true },
       orderBy: { startDate: 'asc' },
-      include: { squads: { orderBy: { position: 'asc' } } },
+      include: {
+        squads: { orderBy: { position: 'asc' } },
+        _count: {
+          select: {
+            registrations: { where: { status: { in: ['AWAITING_PAYMENT', 'CONFIRMED'] } } },
+          },
+        },
+      },
     });
   });
 

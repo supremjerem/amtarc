@@ -6,6 +6,7 @@ import { NewsModule } from './news/news.module';
 import { AuthModule } from './auth/auth.module';
 import { ContentModule } from './content/content.module';
 import { MatchesModule } from './matches/matches.module';
+import { RegistrationsModule } from './registrations/registrations.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { AppController } from './app.controller';
 
@@ -20,6 +21,7 @@ import { AppController } from './app.controller';
     AuthModule,
     ContentModule,
     MatchesModule,
+    RegistrationsModule,
     UploadsModule,
   ],
   controllers: [AppController],

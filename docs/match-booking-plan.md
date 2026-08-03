@@ -97,8 +97,12 @@ squad assignment published. Provider with an EU presence (Brevo or Resend).
    2026-08: `Match`/`Squad` models, `matches` API module (public list/detail hiding
    drafts, guarded CRUD, transactional squad replacement), admin match forms with a
    squad editor, ISR pages revalidated via the `matches` tag.
-2. Registration with squad requests, bank-transfer instructions, admin payment
-   confirmation, emails.
+2. ✅ Registration with squad requests, bank-transfer instructions, admin payment
+   confirmation, emails. Shipped 2026-08: `Registration`/`SquadRequest` models with
+   per-match unique email and `AMT-XXXXXX` transfer references, capacity/wait-list
+   logic with automatic promotion on cancellation, public registration form and
+   status lookup, admin registrations board (mark paid / cancel), and a MailService
+   (log driver by default, Resend via `MAIL_DRIVER=resend` + `RESEND_API_KEY`).
 3. Squadding algorithm + squadding board + wait-list automation.
 4. Federation export (Level 2/3). Optional later: online payment if a workable
    per-club setup appears (e.g. Stripe Connect routing to host clubs).
