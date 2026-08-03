@@ -95,6 +95,8 @@ Planned:
 - [ ] Continuous deployment once a hosting target is chosen (staging → production via GitHub Environments)
 - [ ] Shared `packages/` workspace for API/web DTO types
 - [ ] Raise the API coverage threshold as controller/guard tests land
+- [ ] Major dependency migrations deferred from Dependabot (breaking, need dedicated passes):
+      ESLint 10, TypeScript 7
 
 ## License
 
