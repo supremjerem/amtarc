@@ -36,3 +36,6 @@ pnpm-debug.log*
 
 # api uploaded images (local content)
 apps/api/uploads/
+
+# test coverage reports (generated)
+coverage/

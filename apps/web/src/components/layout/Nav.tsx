@@ -40,7 +40,7 @@ export function Nav() {
       )}
     >
       <Container className="flex h-[60px] items-center justify-between">
-        <Link href="#top" className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3">
           <Image
             src="/panther.png"
             alt="Panthère AMTARC"
@@ -64,7 +64,7 @@ export function Nav() {
               {link.label}
             </Link>
           ))}
-          <PillButton href="#contact" variant="gold" className="px-[18px] py-2 text-[13px]">
+          <PillButton href="/#contact" variant="gold" className="px-[18px] py-2 text-[13px]">
             Nous rejoindre
           </PillButton>
         </div>

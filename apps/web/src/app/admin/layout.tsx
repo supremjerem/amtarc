@@ -23,6 +23,9 @@ export default function AdminLayout({ children }: Readonly<{ children: React.Rea
             <Link href="/admin/news" className="hover:text-ink">
               Actualités
             </Link>
+            <Link href="/admin/matches" className="hover:text-ink">
+              Matchs
+            </Link>
             <Link href="/admin/content" className="hover:text-ink">
               Contenu du site
             </Link>

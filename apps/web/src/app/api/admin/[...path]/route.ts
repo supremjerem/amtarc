@@ -5,11 +5,17 @@ const API_URL = process.env.API_URL ?? 'http://localhost:3001';
 
 // Only these admin endpoints may be proxied; anything else is a 404.
 const ALLOWED_ROUTES: Record<string, RegExp[]> = {
-  GET: [/^news\/admin$/, /^news\/admin\/[^/]+$/, /^content$/],
-  POST: [/^news$/, /^uploads$/],
-  PUT: [/^content\/[a-z-]+$/],
-  PATCH: [/^news\/[^/]+$/],
-  DELETE: [/^news\/[^/]+$/],
+  GET: [
+    /^news\/admin$/,
+    /^news\/admin\/[^/]+$/,
+    /^content$/,
+    /^matches\/admin$/,
+    /^matches\/admin\/[^/]+$/,
+  ],
+  POST: [/^news$/, /^uploads$/, /^matches$/],
+  PUT: [/^content\/[a-z-]+$/, /^matches\/[^/]+\/squads$/],
+  PATCH: [/^news\/[^/]+$/, /^matches\/[^/]+$/],
+  DELETE: [/^news\/[^/]+$/, /^matches\/[^/]+$/],
 };
 
 type RouteContext = { params: Promise<{ path: string[] }> };

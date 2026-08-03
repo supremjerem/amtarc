@@ -28,6 +28,39 @@ model News {
   updatedAt   DateTime     @updatedAt
 }
 
+// IPSC matches organized by the club. Registrations arrive in a later phase;
+// payment is by bank transfer to the host club (per-match payment fields).
+model Match {
+  id                   String    @id @default(cuid())
+  title                String
+  description          String?
+  location             String
+  startDate            DateTime
+  endDate              DateTime
+  stages               Int?
+  rounds               Int?
+  feeCents             Int       @default(0)
+  registrationDeadline DateTime?
+  published            Boolean   @default(false)
+  paymentIban          String?
+  paymentPayee         String?
+  paymentInstructions  String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  squads               Squad[]
+}
+
+model Squad {
+  id         String   @id @default(cuid())
+  matchId    String
+  match      Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  label      String
+  day        DateTime
+  startTime  String
+  targetSize Int      @default(12)
+  position   Int      @default(0)
+}
+
 // Editable site copy, one row per page section (hero, announcements, ...).
 // The web app merges stored sections over its built-in defaults, so rows
 // only exist for sections an admin has actually edited.

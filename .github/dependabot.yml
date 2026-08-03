@@ -1,8 +1,10 @@
 version: 2
 updates:
   # Single entry covers the whole pnpm workspace (one lockfile at the root).
+  # PRs target develop so main only moves through reviewed develop merges.
   - package-ecosystem: npm
     directory: /
+    target-branch: develop
     schedule:
       interval: weekly
     groups:
@@ -11,5 +13,6 @@ updates:
 
   - package-ecosystem: github-actions
     directory: /
+    target-branch: develop
     schedule:
       interval: weekly
