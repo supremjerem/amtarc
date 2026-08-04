@@ -179,6 +179,25 @@ html {
   scroll-behavior: smooth;
 }
 
+/*
+ * Anchor landing.
+ *
+ * The nav is fixed and 60px tall, so an anchor jump must leave room for it.
+ * What matters is where the section's *content* lands, not its border box, and
+ * sections carry very different top padding — #actus has 96px, #infos 20px,
+ * #contact none. A single `scroll-padding-top` on the container shifts every
+ * section by the same amount, which fixes the shallow ones but leaves the
+ * generous ones with far too much air.
+ *
+ * So each anchor compensates for its own padding instead:
+ *
+ *     scroll-margin-top = 96px - (section's own padding-top)
+ *
+ * 96px puts content ~36px clear of the nav, which is what #actus already does
+ * naturally. Sections padded to 96px or more (#actus, #tsv) need nothing; the
+ * few-pixel shortfall on #club and #annonces is imperceptible and left alone.
+ */
+
 ::selection {
   background: var(--color-gold-dark);
   color: var(--color-ink);

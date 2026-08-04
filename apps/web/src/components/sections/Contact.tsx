@@ -10,8 +10,10 @@ import { Reveal } from '@/components/ui/Reveal';
 export function Contact({
   content: contact = defaultContact,
 }: Readonly<{ content?: typeof defaultContact }>) {
+  // scroll-mt: no top padding of its own, so it carries the full anchor
+  // offset — see the anchor-landing note in globals.css.
   return (
-    <section id="contact" className="mb-10">
+    <section id="contact" className="mb-10 scroll-mt-[96px]">
       <Container>
         <Reveal className="relative overflow-hidden rounded-card-lg bg-gold-gradient-card px-6 py-14 sm:px-12 sm:py-18">
           <HexagonPattern color="#000000" opacity={0.08} />

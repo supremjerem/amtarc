@@ -7,8 +7,10 @@ import { Reveal } from '@/components/ui/Reveal';
 export function PracticalInfo({
   content: practicalInfo = defaultPracticalInfo,
 }: Readonly<{ content?: typeof defaultPracticalInfo }>) {
+  // scroll-mt: pt-5 (20px) alone would leave the cards under the fixed nav on
+  // an anchor jump — see the anchor-landing note in globals.css.
   return (
-    <section id="infos" className="pt-5 pb-24">
+    <section id="infos" className="scroll-mt-[76px] pt-5 pb-24">
       <Container className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Reveal className="relative overflow-hidden rounded-[26px] bg-brand p-10">
           <HexagonPattern color="#ffb200" opacity={0.1} />

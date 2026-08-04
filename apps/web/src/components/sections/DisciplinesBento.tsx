@@ -76,7 +76,7 @@ function DisciplineTile({ card }: Readonly<{ card: DisciplineCard }>) {
 
 export function DisciplinesBento() {
   return (
-    <section id="disciplines" className="pt-[50px] pb-24">
+    <section id="disciplines" className="scroll-mt-[46px] pt-[50px] pb-24">
       <Container>
         <Reveal className="mb-8">
           <SectionKicker>{disciplinesKicker.kicker}</SectionKicker>
