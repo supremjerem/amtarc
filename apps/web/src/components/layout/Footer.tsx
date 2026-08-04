@@ -23,7 +23,7 @@ export function Footer() {
                 height={38}
                 className="h-[38px] w-auto"
               />
-              <span className="bg-gold-gradient bg-clip-text font-display text-[26px] leading-none tracking-[0.03em] text-transparent">
+              <span className="bg-gold-gradient bg-clip-text display-wordmark text-[26px] leading-none text-transparent">
                 AMTARC
               </span>
             </Link>

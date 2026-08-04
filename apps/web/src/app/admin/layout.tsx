@@ -16,7 +16,7 @@ export default function AdminLayout({ children }: Readonly<{ children: React.Rea
     <div className="min-h-screen bg-cream-50 font-body text-ink">
       <header className="flex items-center justify-between border-b border-ink/10 bg-white px-8 py-4">
         <div className="flex items-center gap-8">
-          <Link href="/admin/news" className="font-display text-xl tracking-[0.03em]">
+          <Link href="/admin/news" className="display-wordmark text-xl">
             AMTARC · Admin
           </Link>
           <nav className="flex items-center gap-5 text-sm font-semibold text-ink-secondary">

@@ -20,9 +20,7 @@ export class ContentService {
   }
 
   async upsert(key: string, data: Prisma.InputJsonObject) {
-    if (!(SECTION_KEYS as readonly string[]).includes(key)) {
-      throw new BadRequestException(`Unknown content section "${key}"`);
-    }
+    this.assertKnownSection(key);
     const row = await this.prisma.siteContent.upsert({
       where: { key },
       update: { data },
@@ -30,5 +28,26 @@ export class ContentService {
     });
     await this.revalidate.notify('content');
     return row;
+  }
+
+  /**
+   * Drops a section's stored override so the site falls back to the built-in
+   * defaults in apps/web/src/lib/content.ts. Deleting the row (rather than
+   * writing the defaults back) keeps future changes to those defaults live.
+   *
+   * Resetting a section that was never overridden is a no-op, so the call is
+   * idempotent and safe to retry.
+   */
+  async reset(key: string) {
+    this.assertKnownSection(key);
+    await this.prisma.siteContent.deleteMany({ where: { key } });
+    await this.revalidate.notify('content');
+    return { key, reset: true };
+  }
+
+  private assertKnownSection(key: string) {
+    if (!(SECTION_KEYS as readonly string[]).includes(key)) {
+      throw new BadRequestException(`Unknown content section "${key}"`);
+    }
   }
 }

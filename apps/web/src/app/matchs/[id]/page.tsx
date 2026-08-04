@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import clsx from 'clsx';
 import { Nav } from '@/components/layout/Nav';
 import { Footer } from '@/components/layout/Footer';
 import { Container } from '@/components/ui/Container';
+import { Heading } from '@/components/ui/Heading';
+import { Reveal } from '@/components/ui/Reveal';
+import { CapacityGauge } from '@/components/matches/CapacityGauge';
 import { RegistrationForm } from '@/components/matches/RegistrationForm';
 import {
   formatDay,
@@ -52,12 +56,16 @@ export default async function MatchDetailPage({ params }: PageProps) {
           <Link href="/matchs" className="text-sm font-semibold text-ink-soft hover:text-ink">
             ← Tous les matchs
           </Link>
-          <div className="mt-3 text-xs font-extrabold tracking-[0.08em] text-overline">
+          <div className="data-label mt-4 text-overline">
             {formatMatchDates(match)} · {match.location}
           </div>
-          <h1 className="mt-1 mb-4 text-[clamp(30px,4vw,46px)] leading-[1.02] font-extrabold tracking-[-0.02em]">
+          <Heading
+            as="h1"
+            static
+            className="mt-2 mb-4 text-[clamp(32px,4.4vw,52px)] leading-[1.02]"
+          >
             {match.title}
-          </h1>
+          </Heading>
 
           {match.description && (
             <p className="mb-8 max-w-2xl leading-[1.6] whitespace-pre-line text-ink-body">
@@ -65,51 +73,58 @@ export default async function MatchDetailPage({ params }: PageProps) {
             </p>
           )}
 
-          <div className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-4">
-            {match.stages && (
-              <div className="rounded-card border border-ink/10 bg-white p-5 shadow-card">
-                <div className="text-2xl font-extrabold">{match.stages}</div>
-                <div className="text-sm text-ink-soft">stages</div>
-              </div>
-            )}
-            {match.rounds && (
-              <div className="rounded-card border border-ink/10 bg-white p-5 shadow-card">
-                <div className="text-2xl font-extrabold">≈{match.rounds}</div>
-                <div className="text-sm text-ink-soft">coups</div>
-              </div>
-            )}
-            <div className="rounded-card border border-ink/10 bg-white p-5 shadow-card">
-              <div className="text-2xl font-extrabold">{formatFee(match.feeCents)}</div>
-              <div className="text-sm text-ink-soft">engagement</div>
-            </div>
-            {deadline && (
-              <div className="rounded-card border border-ink/10 bg-white p-5 shadow-card">
-                <div className="text-base font-extrabold">{deadline}</div>
-                <div className="text-sm text-ink-soft">clôture des inscriptions</div>
-              </div>
-            )}
-            {capacity !== null && (
-              <div className="rounded-card border border-ink/10 bg-white p-5 shadow-card">
-                <div className="text-2xl font-extrabold">
-                  {remaining} / {capacity}
+          {/*
+            The match read as one instrument panel rather than five loose stat
+            cards: a single enclosure, hairline-divided, figures in the data
+            face so they align down the row.
+          */}
+          <Reveal className="mb-10 overflow-hidden rounded-card border border-ink/10 bg-white shadow-card">
+            <div className="grid grid-cols-2 divide-ink/10 md:grid-cols-4 md:divide-x">
+              {match.stages && (
+                <div className="border-b border-ink/10 p-5 md:border-b-0">
+                  <div className="data-figure text-[26px] leading-none">{match.stages}</div>
+                  <div className="data-label mt-2 text-ink-soft">stages</div>
                 </div>
-                <div className="text-sm text-ink-soft">places restantes</div>
+              )}
+              {match.rounds && (
+                <div className="border-b border-l border-ink/10 p-5 md:border-b-0 md:border-l-0">
+                  <div className="data-figure text-[26px] leading-none">≈{match.rounds}</div>
+                  <div className="data-label mt-2 text-ink-soft">coups</div>
+                </div>
+              )}
+              <div className="border-b border-ink/10 p-5 md:border-b-0">
+                <div className="data-figure text-[26px] leading-none">
+                  {formatFee(match.feeCents)}
+                </div>
+                <div className="data-label mt-2 text-ink-soft">engagement</div>
+              </div>
+              {deadline && (
+                <div className="border-b border-l border-ink/10 p-5 md:border-b-0 md:border-l-0">
+                  <div className="data-figure text-[15px] leading-tight">{deadline}</div>
+                  <div className="data-label mt-2 text-ink-soft">clôture</div>
+                </div>
+              )}
+            </div>
+
+            {capacity !== null && remaining !== null && (
+              <div className="border-t border-ink/10 bg-cream-50 px-5 py-4">
+                <CapacityGauge capacity={capacity} remaining={remaining} />
               </div>
             )}
-          </div>
+          </Reveal>
 
           {match.squads.length > 0 && (
             <>
-              <h2 className="mb-4 text-xl font-extrabold tracking-[-0.01em]">Squads</h2>
-              <div className="mb-10 overflow-x-auto rounded-card border border-ink/10 bg-white shadow-card">
+              <Heading className="mb-4 text-[22px]">Squads</Heading>
+              <Reveal className="mb-10 overflow-x-auto rounded-card border border-ink/10 bg-white shadow-card">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b border-ink/10 text-xs font-extrabold tracking-[0.08em] text-overline">
-                      <th className="px-5 py-3">SQUAD</th>
-                      <th className="px-5 py-3">JOUR</th>
-                      <th className="px-5 py-3">DÉPART</th>
-                      <th className="px-5 py-3">PLACES</th>
-                      <th className="px-5 py-3">TIREURS</th>
+                    <tr className="border-b border-ink/10 bg-cream-50">
+                      <th className="data-label px-5 py-3.5 text-overline">Squad</th>
+                      <th className="data-label px-5 py-3.5 text-overline">Jour</th>
+                      <th className="data-label px-5 py-3.5 text-overline">Départ</th>
+                      <th className="data-label px-5 py-3.5 text-overline">Places</th>
+                      <th className="data-label px-5 py-3.5 text-overline">Tireurs</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -117,18 +132,32 @@ export default async function MatchDetailPage({ params }: PageProps) {
                       const shooters = (match.registrations ?? []).filter(
                         (registration) => registration.squadId === squad.id,
                       );
+                      const squadFull = shooters.length >= squad.targetSize;
+
                       return (
                         <tr
                           key={squad.id}
-                          className="border-b border-ink/5 align-top last:border-0"
+                          className="border-b border-ink/5 align-top transition-colors last:border-0 hover:bg-cream-50"
                         >
-                          <td className="px-5 py-3 font-semibold">{squad.label}</td>
-                          <td className="px-5 py-3 capitalize">{formatDay(squad.day)}</td>
-                          <td className="px-5 py-3">{squad.startTime}</td>
-                          <td className="px-5 py-3">
-                            {shooters.length} / {squad.targetSize}
+                          <td className="display px-5 py-3.5 text-[15px] whitespace-nowrap">
+                            {squad.label}
                           </td>
-                          <td className="px-5 py-3 text-ink-soft">
+                          <td className="px-5 py-3.5 capitalize">{formatDay(squad.day)}</td>
+                          <td className="data-figure px-5 py-3.5 text-[13px] whitespace-nowrap">
+                            {squad.startTime}
+                          </td>
+                          <td className="px-5 py-3.5 whitespace-nowrap">
+                            <span
+                              className={clsx(
+                                'data-figure text-[13px]',
+                                squadFull && 'text-ink-soft',
+                              )}
+                            >
+                              {shooters.length}
+                              <span className="text-ink-soft">/{squad.targetSize}</span>
+                            </span>
+                          </td>
+                          <td className="px-5 py-3.5 text-ink-soft">
                             {shooters
                               .map(
                                 (registration) =>
@@ -141,7 +170,7 @@ export default async function MatchDetailPage({ params }: PageProps) {
                     })}
                   </tbody>
                 </table>
-              </div>
+              </Reveal>
               {(match.registrations ?? []).some((registration) => !registration.squadId) && (
                 <p className="-mt-6 mb-10 text-sm text-ink-soft">
                   En attente de squad :{' '}
@@ -154,7 +183,7 @@ export default async function MatchDetailPage({ params }: PageProps) {
             </>
           )}
 
-          <h2 className="mb-4 text-xl font-extrabold tracking-[-0.01em]">Inscription</h2>
+          <Heading className="mb-4 text-[22px]">Inscription</Heading>
           {registrationsClosed ? (
             <p className="mb-10 text-sm text-ink-soft">
               Les inscriptions sont closes pour ce match.
@@ -172,9 +201,7 @@ export default async function MatchDetailPage({ params }: PageProps) {
 
           {(match.paymentIban || match.paymentInstructions) && (
             <div className="rounded-card border border-ink/10 bg-white p-7 shadow-card">
-              <h2 className="mb-3 text-xl font-extrabold tracking-[-0.01em]">
-                Règlement de l&apos;engagement
-              </h2>
+              <Heading className="mb-3 text-[22px]">Règlement de l&apos;engagement</Heading>
               <p className="mb-3 text-sm text-ink-soft">
                 Le paiement se fait par virement bancaire au club organisateur.
               </p>

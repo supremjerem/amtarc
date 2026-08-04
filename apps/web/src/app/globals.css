@@ -44,8 +44,9 @@
   --color-on-dark-muted: #7a6f5c;
 
   /* Typography */
-  --font-display: var(--font-anton), sans-serif;
-  --font-body: var(--font-manrope), -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: var(--font-archivo), sans-serif;
+  --font-body: var(--font-instrument-sans), -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-data: var(--font-martian-mono), ui-monospace, monospace;
 
   /* Radii */
   --radius-pill: 980px;
@@ -108,9 +109,94 @@
   animation: reveal 0.9s ease both;
 }
 
+/*
+ * Display type — the site's signature.
+ *
+ * Archivo is loaded with its `wdth` axis so headings can arrive compressed and
+ * settle to full width on scroll-in. The end state is always the widest one:
+ * text that fits at wdth 100 can never wrap onto more lines at a narrower
+ * width, so the animation cannot change line count and cannot shift layout.
+ */
+.display {
+  font-family: var(--font-display);
+  font-variation-settings:
+    'wdth' 100,
+    'wght' 700;
+  letter-spacing: -0.022em;
+}
+
+.display-compressed {
+  font-variation-settings:
+    'wdth' 85,
+    'wght' 700;
+}
+
+/* The wordmark holds the widest, heaviest setting on the page. */
+.display-wordmark {
+  font-family: var(--font-display);
+  font-variation-settings:
+    'wdth' 118,
+    'wght' 900;
+  letter-spacing: -0.005em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .display-animated {
+    transition: font-variation-settings 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: font-variation-settings;
+  }
+}
+
+/* Reduced motion: headings render at their final width, no entrance at all. */
+@media (prefers-reduced-motion: reduce) {
+  .display-compressed {
+    font-variation-settings:
+      'wdth' 100,
+      'wght' 700;
+  }
+}
+
+/*
+ * Measured data: start times, capacities, fees, stage counts, IBAN. Martian
+ * Mono is deliberately narrow-tracked here so figures line up in tables.
+ */
+.data-label {
+  font-family: var(--font-data);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.data-figure {
+  font-family: var(--font-data);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
 html {
   scroll-behavior: smooth;
 }
+
+/*
+ * Anchor landing.
+ *
+ * The nav is fixed and 60px tall, so an anchor jump must leave room for it.
+ * What matters is where the section's *content* lands, not its border box, and
+ * sections carry very different top padding — #actus has 96px, #infos 20px,
+ * #contact none. A single `scroll-padding-top` on the container shifts every
+ * section by the same amount, which fixes the shallow ones but leaves the
+ * generous ones with far too much air.
+ *
+ * So each anchor compensates for its own padding instead:
+ *
+ *     scroll-margin-top = 96px - (section's own padding-top)
+ *
+ * 96px puts content ~36px clear of the nav, which is what #actus already does
+ * naturally. Sections padded to 96px or more (#actus, #tsv) need nothing; the
+ * few-pixel shortfall on #club and #annonces is imperceptible and left alone.
+ */
 
 ::selection {
   background: var(--color-gold-dark);

@@ -12,8 +12,10 @@ import {
   type ShooterCategory,
 } from '@/lib/registrations';
 
+// Field labels stay in the body face rather than the uppercase data face: this
+// is the form that takes people's money, so legibility outranks flourish.
 const inputClassName =
-  'w-full rounded-lg border border-ink/15 px-3 py-2 text-sm outline-none focus:border-orange';
+  'w-full rounded-lg border border-ink/15 bg-white px-3 py-2.5 text-sm transition-colors outline-none hover:border-ink/25 focus-visible:border-orange focus-visible:ring-2 focus-visible:ring-orange/25';
 
 function Field({
   label,
@@ -73,12 +75,12 @@ export function RegistrationForm({
   if (result) {
     return (
       <div className="rounded-card border border-ink/10 bg-white p-7 shadow-card">
-        <h3 className="mb-3 text-xl font-extrabold tracking-[-0.01em]">
+        <h3 className="mb-3 display text-xl">
           {result.status === 'WAITLISTED' ? "Vous êtes en liste d'attente" : 'Inscription reçue !'}
         </h3>
         <p className="mb-3 text-sm text-ink-body">
           Votre référence :{' '}
-          <span className="rounded bg-cream-50 px-2 py-1 font-mono font-bold">
+          <span className="data-figure rounded bg-cream-50 px-2 py-1 text-[13px]">
             {result.reference}
           </span>
         </p>
@@ -211,7 +213,7 @@ export function RegistrationForm({
       <button
         type="submit"
         disabled={sending}
-        className="self-start rounded-pill bg-gold-gradient px-6 py-3 text-sm font-extrabold text-ink disabled:opacity-60"
+        className="self-start rounded-pill bg-gold-gradient px-6 py-3 text-sm font-bold text-ink shadow-btn-gold transition-all duration-200 hover:-translate-y-0.5 hover:brightness-[1.04] disabled:translate-y-0 disabled:opacity-60"
       >
         {sending ? 'Envoi…' : "S'inscrire"}
       </button>

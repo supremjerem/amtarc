@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import {
   getAtPath,
+  resetSectionValues,
   saveSectionValues,
   setAtPath,
   type FieldConfig,
@@ -121,7 +122,9 @@ export function ContentSectionForm({
   initialValues,
 }: Readonly<{ config: SectionConfig; initialValues: unknown }>) {
   const [values, setValues] = useState<unknown>(initialValues);
-  const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [status, setStatus] = useState<
+    'idle' | 'saving' | 'saved' | 'error' | 'resetting' | 'reset'
+  >('idle');
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(event: React.FormEvent) {
@@ -131,6 +134,27 @@ export function ContentSectionForm({
     try {
       await saveSectionValues(config.key, values);
       setStatus('saved');
+    } catch (err) {
+      setStatus('error');
+      setError(err instanceof Error ? err.message : 'Une erreur est survenue.');
+    }
+  }
+
+  async function handleReset() {
+    if (
+      !window.confirm(
+        `Réinitialiser « ${config.title} » ?\n\nLe texte saisi ici sera supprimé et la section reprendra le contenu par défaut du site.`,
+      )
+    ) {
+      return;
+    }
+    setStatus('resetting');
+    setError(null);
+    try {
+      // Repopulates the form with the defaults the section now falls back to,
+      // so the editor shows what the public site will render.
+      setValues(await resetSectionValues(config.key));
+      setStatus('reset');
     } catch (err) {
       setStatus('error');
       setError(err instanceof Error ? err.message : 'Une erreur est survenue.');
@@ -157,14 +181,29 @@ export function ContentSectionForm({
           Enregistré. Le site public se met à jour sous quelques secondes.
         </p>
       )}
+      {status === 'reset' && (
+        <p className="text-sm font-semibold text-green-700">
+          Section réinitialisée. Elle affiche de nouveau le contenu par défaut du site.
+        </p>
+      )}
 
-      <button
-        type="submit"
-        disabled={status === 'saving'}
-        className="self-start rounded-pill bg-gold-gradient px-6 py-3 text-sm font-extrabold text-ink disabled:opacity-60"
-      >
-        {status === 'saving' ? 'Enregistrement…' : 'Enregistrer'}
-      </button>
+      <div className="flex flex-wrap items-center gap-4">
+        <button
+          type="submit"
+          disabled={status === 'saving' || status === 'resetting'}
+          className="rounded-pill bg-gold-gradient px-6 py-3 text-sm font-bold text-ink shadow-btn-gold transition-all duration-200 hover:-translate-y-0.5 hover:brightness-[1.04] disabled:translate-y-0 disabled:opacity-60"
+        >
+          {status === 'saving' ? 'Enregistrement…' : 'Enregistrer'}
+        </button>
+        <button
+          type="button"
+          onClick={handleReset}
+          disabled={status === 'saving' || status === 'resetting'}
+          className="text-sm font-semibold text-ink-soft underline-offset-4 transition-colors hover:text-ink hover:underline disabled:opacity-60"
+        >
+          {status === 'resetting' ? 'Réinitialisation…' : 'Réinitialiser au contenu par défaut'}
+        </button>
+      </div>
     </form>
   );
 }

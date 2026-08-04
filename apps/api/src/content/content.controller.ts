@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Put, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ContentService } from './content.service';
 import { UpdateContentDto } from './dto/update-content.dto';
@@ -17,5 +17,12 @@ export class ContentController {
   @Put(':key')
   update(@Param('key') key: string, @Body() dto: UpdateContentDto) {
     return this.contentService.upsert(key, dto.data as Prisma.InputJsonObject);
+  }
+
+  // Clears the override so the section renders the built-in defaults again.
+  @UseGuards(JwtAuthGuard)
+  @Delete(':key')
+  reset(@Param('key') key: string) {
+    return this.contentService.reset(key);
   }
 }

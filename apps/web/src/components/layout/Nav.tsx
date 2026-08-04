@@ -49,7 +49,7 @@ export function Nav() {
             className="h-[34px] w-auto drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]"
             priority
           />
-          <span className="bg-gold-gradient bg-clip-text font-display text-2xl leading-none tracking-[0.03em] text-transparent [-webkit-text-stroke:0.6px_rgba(20,16,8,0.55)]">
+          <span className="display-wordmark bg-gold-gradient bg-clip-text text-2xl leading-none text-transparent [-webkit-text-stroke:0.6px_rgba(20,16,8,0.55)]">
             AMTARC
           </span>
         </Link>

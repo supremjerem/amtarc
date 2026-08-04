@@ -6,11 +6,13 @@ import { ContentService } from './content.service';
 
 describe('ContentService', () => {
   let service: ContentService;
-  let prisma: { siteContent: { findMany: jest.Mock; upsert: jest.Mock } };
+  let prisma: {
+    siteContent: { findMany: jest.Mock; upsert: jest.Mock; deleteMany: jest.Mock };
+  };
   let notifyMock: jest.Mock;
 
   beforeEach(async () => {
-    prisma = { siteContent: { findMany: jest.fn(), upsert: jest.fn() } };
+    prisma = { siteContent: { findMany: jest.fn(), upsert: jest.fn(), deleteMany: jest.fn() } };
     notifyMock = jest.fn().mockResolvedValue(undefined);
 
     const moduleRef = await Test.createTestingModule({
@@ -49,5 +51,25 @@ describe('ContentService', () => {
   it('should reject unknown section keys', async () => {
     await expect(service.upsert('not-a-section', {})).rejects.toBeInstanceOf(BadRequestException);
     expect(prisma.siteContent.upsert).not.toHaveBeenCalled();
+  });
+
+  it('should drop a section override on reset and notify revalidation', async () => {
+    prisma.siteContent.deleteMany.mockResolvedValue({ count: 1 });
+
+    await expect(service.reset('hero')).resolves.toEqual({ key: 'hero', reset: true });
+
+    expect(prisma.siteContent.deleteMany).toHaveBeenCalledWith({ where: { key: 'hero' } });
+    expect(notifyMock).toHaveBeenCalledWith('content');
+  });
+
+  it('should treat resetting a section that was never overridden as a no-op', async () => {
+    prisma.siteContent.deleteMany.mockResolvedValue({ count: 0 });
+
+    await expect(service.reset('contact')).resolves.toEqual({ key: 'contact', reset: true });
+  });
+
+  it('should reject unknown section keys on reset', async () => {
+    await expect(service.reset('not-a-section')).rejects.toBeInstanceOf(BadRequestException);
+    expect(prisma.siteContent.deleteMany).not.toHaveBeenCalled();
   });
 });

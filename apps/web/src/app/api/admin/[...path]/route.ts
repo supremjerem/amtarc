@@ -18,7 +18,7 @@ const ALLOWED_ROUTES: Record<string, RegExp[]> = {
   POST: [/^news$/, /^uploads$/, /^matches$/],
   PUT: [/^content\/[a-z-]+$/, /^matches\/[^/]+\/squads$/, /^matches\/[^/]+\/squadding$/],
   PATCH: [/^news\/[^/]+$/, /^matches\/[^/]+$/, /^registrations\/[^/]+\/(paid|cancel)$/],
-  DELETE: [/^news\/[^/]+$/, /^matches\/[^/]+$/],
+  DELETE: [/^news\/[^/]+$/, /^matches\/[^/]+$/, /^content\/[a-z-]+$/],
 };
 
 type RouteContext = { params: Promise<{ path: string[] }> };

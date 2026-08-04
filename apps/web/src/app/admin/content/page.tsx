@@ -4,7 +4,7 @@ import { SECTION_CONFIGS } from '@/lib/admin-content';
 export default function AdminContentPage() {
   return (
     <div>
-      <h1 className="mb-6 font-display text-2xl tracking-[0.02em]">Contenu du site</h1>
+      <h1 className="mb-6 display text-2xl">Contenu du site</h1>
       <ul className="flex flex-col gap-3">
         {SECTION_CONFIGS.map((section) => (
           <li

@@ -50,7 +50,7 @@ export default function EditMatchPage() {
 
   return (
     <div>
-      <h1 className="mb-6 font-display text-2xl tracking-[0.02em]">Modifier le match</h1>
+      <h1 className="mb-6 display text-2xl">Modifier le match</h1>
       {error && <p className="text-sm font-semibold text-red-600">{error}</p>}
       {!initialValues && !error && <p className="text-sm text-ink-soft">Chargement…</p>}
       {initialValues && (

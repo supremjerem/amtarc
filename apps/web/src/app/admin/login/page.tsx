@@ -35,7 +35,7 @@ export default function AdminLoginPage() {
         onSubmit={handleSubmit}
         className="w-full max-w-sm rounded-card border border-ink/10 bg-white p-8 shadow-card"
       >
-        <h1 className="mb-6 font-display text-2xl tracking-[0.03em]">AMTARC · Admin</h1>
+        <h1 className="mb-6 display-wordmark text-2xl">AMTARC · Admin</h1>
 
         <label className="mb-4 block">
           <span className="mb-1.5 block text-sm font-semibold text-ink-secondary">Email</span>

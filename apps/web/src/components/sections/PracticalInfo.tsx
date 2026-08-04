@@ -7,15 +7,15 @@ import { Reveal } from '@/components/ui/Reveal';
 export function PracticalInfo({
   content: practicalInfo = defaultPracticalInfo,
 }: Readonly<{ content?: typeof defaultPracticalInfo }>) {
+  // scroll-mt: pt-5 (20px) alone would leave the cards under the fixed nav on
+  // an anchor jump — see the anchor-landing note in globals.css.
   return (
-    <section id="infos" className="pt-5 pb-24">
+    <section id="infos" className="scroll-mt-[76px] pt-5 pb-24">
       <Container className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Reveal className="relative overflow-hidden rounded-[26px] bg-brand p-10">
           <HexagonPattern color="#ffb200" opacity={0.1} />
           <div className="relative">
-            <div className="mb-[18px] text-xs font-extrabold tracking-[0.14em] text-gold">
-              {practicalInfo.hoursKicker}
-            </div>
+            <div className="mb-[18px] data-label text-gold">{practicalInfo.hoursKicker}</div>
             <div className="flex flex-col">
               {practicalInfo.hours.map((entry, index) => (
                 <div
@@ -24,8 +24,8 @@ export function PracticalInfo({
                     index < practicalInfo.hours.length - 1 ? 'border-b border-white/[0.12]' : ''
                   }`}
                 >
-                  <span className="text-[19px] font-extrabold text-white">{entry.day}</span>
-                  <span className="text-base font-bold text-on-dark-lighter">{entry.time}</span>
+                  <span className="display text-[19px] text-white">{entry.day}</span>
+                  <span className="data-figure text-[15px] text-on-dark-lighter">{entry.time}</span>
                 </div>
               ))}
             </div>
@@ -37,12 +37,8 @@ export function PracticalInfo({
           delay={0.06}
           className="rounded-[26px] border border-ink/10 bg-white p-10 shadow-card"
         >
-          <div className="mb-[18px] text-xs font-extrabold tracking-[0.14em] text-overline">
-            {practicalInfo.membershipKicker}
-          </div>
-          <h3 className="mb-[18px] text-[22px] font-extrabold">
-            {practicalInfo.membershipHeading}
-          </h3>
+          <div className="mb-[18px] data-label text-overline">{practicalInfo.membershipKicker}</div>
+          <h3 className="mb-[18px] display text-[22px]">{practicalInfo.membershipHeading}</h3>
           <div className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
             {practicalInfo.membershipChecklist.map((item) => (
               <div

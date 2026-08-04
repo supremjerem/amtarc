@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { clubIntro, clubStats } from '@/lib/content';
 import { Container } from '@/components/ui/Container';
+import { Heading } from '@/components/ui/Heading';
 import { SectionKicker } from '@/components/ui/SectionKicker';
 import { StatCounter } from '@/components/ui/StatCounter';
 import { Reveal } from '@/components/ui/Reveal';
@@ -29,9 +30,9 @@ export function ClubStats() {
       <Container className="grid grid-cols-1 items-center gap-13 lg:grid-cols-[1.1fr_1fr]">
         <Reveal>
           <SectionKicker>{clubIntro.kicker}</SectionKicker>
-          <h2 className="mb-[22px] text-[clamp(30px,4vw,50px)] leading-[1.04] font-extrabold tracking-[-0.025em] whitespace-pre-line">
+          <Heading className="mb-[22px] text-[clamp(30px,4vw,50px)] leading-[1.04] whitespace-pre-line">
             {clubIntro.heading}
-          </h2>
+          </Heading>
           <p className="mb-[26px] max-w-[520px] text-[17px] leading-[1.6] text-ink-body">
             {clubIntro.paragraph}
           </p>
@@ -55,7 +56,7 @@ export function ClubStats() {
             >
               <div
                 className={clsx(
-                  'font-display text-[52px] leading-none',
+                  'data-figure text-[46px] leading-none',
                   NUMBER_STYLES[stat.variant],
                 )}
               >
