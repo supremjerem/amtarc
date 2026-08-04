@@ -30,7 +30,7 @@ export default function AdminNewsListPage() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="font-display text-2xl tracking-[0.02em]">Actualités</h1>
+        <h1 className="display text-2xl">Actualités</h1>
         <Link
           href="/admin/news/new"
           className="rounded-pill bg-gold-gradient px-5 py-2.5 text-sm font-extrabold text-ink"

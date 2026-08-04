@@ -26,7 +26,7 @@ export default function EditContentSectionPage() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="font-display text-2xl tracking-[0.02em]">{config.title}</h1>
+        <h1 className="display text-2xl">{config.title}</h1>
         <Link href="/admin/content" className="text-sm font-semibold text-ink-soft hover:text-ink">
           ← Contenu du site
         </Link>

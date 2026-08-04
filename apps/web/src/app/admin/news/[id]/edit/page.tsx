@@ -33,7 +33,7 @@ export default function EditNewsPage() {
 
   return (
     <div>
-      <h1 className="mb-6 font-display text-2xl tracking-[0.02em]">Modifier l&apos;actu</h1>
+      <h1 className="mb-6 display text-2xl">Modifier l&apos;actu</h1>
       {error && <p className="text-sm font-semibold text-red-600">{error}</p>}
       {!initialValues && !error && <p className="text-sm text-ink-soft">Chargement…</p>}
       {initialValues && (

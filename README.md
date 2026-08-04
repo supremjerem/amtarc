@@ -14,6 +14,29 @@ Rebuilt from a Claude Design HTML prototype into a real, maintainable stack.
 
 The public site is statically generated with a 5-minute ISR safety net; the API pings a `/api/revalidate` webhook on every news write for near-instant updates without full rebuilds.
 
+## Design system
+
+Three type roles, defined as classes in `apps/web/src/app/globals.css` — use these rather than raw
+font utilities, so every page stays on the same system:
+
+| Role    | Face                               | Class                           | Used for                                                                         |
+| ------- | ---------------------------------- | ------------------------------- | -------------------------------------------------------------------------------- |
+| Display | Archivo (variable `wght` + `wdth`) | `.display`, `.display-wordmark` | Headings, card titles, the AMTARC wordmark                                       |
+| Body    | Instrument Sans                    | inherited from `<body>`         | Paragraphs, form labels, links                                                   |
+| Data    | Martian Mono                       | `.data-label`, `.data-figure`   | Section kickers, and measured values: dates, start times, capacities, fees, IBAN |
+
+**The signature** is the display face's width axis. `<Heading>` (`components/ui/Heading.tsx`) renders
+text at `wdth` 85 and settles it to 100 when it scrolls into view. The final state is the widest one,
+so line count is fixed by the end state and the animation can never reflow the page. Card titles use
+the plain `.display` class without the entrance — the width animation is reserved for section
+headings so it keeps its impact.
+
+Motion is layered deliberately: the width axis on section headings, a short 14px fade-up (`<Reveal>`)
+for blocks, and `<Stagger>`/`<StaggerItem>` for grids and lists. `MotionProvider` applies
+`reducedMotion="user"` globally, which drops movement but keeps cross-fades when the OS asks for
+reduced motion; handle the preference there rather than branching on `useReducedMotion()` inside a
+component, which would change the tree between server and client and break hydration.
+
 Admin authentication uses an httpOnly cookie held by a Next.js BFF proxy (`/api/admin/*`) that forwards requests to the API server-side — the JWT is never exposed to browser JavaScript. See [ADR 0001](docs/adr/0001-admin-auth-httponly-cookie-bff.md).
 
 ## Requirements

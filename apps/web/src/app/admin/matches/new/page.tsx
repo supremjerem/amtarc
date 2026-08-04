@@ -14,7 +14,7 @@ export default function NewMatchPage() {
 
   return (
     <div>
-      <h1 className="mb-6 font-display text-2xl tracking-[0.02em]">Nouveau match</h1>
+      <h1 className="mb-6 display text-2xl">Nouveau match</h1>
       <MatchForm submitLabel="Créer" onSubmit={handleSubmit} />
     </div>
   );

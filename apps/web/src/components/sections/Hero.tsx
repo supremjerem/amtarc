@@ -27,7 +27,7 @@ export function Hero({ content: hero = defaultHero }: Readonly<{ content?: typeo
       <Container className="relative z-[2] grid grid-cols-1 items-center gap-8 md:grid-cols-[1.15fr_0.85fr]">
         <div>
           <div
-            className="animate-reveal mb-6 inline-flex items-center gap-[9px] rounded-pill border border-ink/[0.14] bg-white/70 px-[15px] py-[7px] text-xs font-bold tracking-[0.13em] text-ink-soft"
+            className="animate-reveal data-label mb-6 inline-flex items-center gap-[9px] rounded-pill border border-ink/[0.14] bg-white/70 px-[15px] py-[7px] text-ink-soft"
             style={{ animationDelay: '50ms' }}
           >
             <span className="h-[7px] w-[7px] rounded-[2px] bg-gold-gradient" />
@@ -35,14 +35,14 @@ export function Hero({ content: hero = defaultHero }: Readonly<{ content?: typeo
           </div>
 
           <div
-            className="animate-reveal mb-[18px] bg-hero-gradient bg-clip-text font-display text-[clamp(66px,12vw,150px)] leading-[0.86] tracking-[0.01em] text-transparent [-webkit-text-stroke:2px_rgba(20,16,8,0.82)] drop-shadow-[0_6px_14px_rgba(255,138,0,0.25)]"
+            className="animate-reveal display-wordmark mb-[18px] bg-hero-gradient bg-clip-text text-[clamp(60px,11vw,142px)] leading-[0.84] text-transparent [-webkit-text-stroke:2px_rgba(20,16,8,0.82)] drop-shadow-[0_6px_14px_rgba(255,138,0,0.25)]"
             style={{ animationDelay: '120ms' }}
           >
             {hero.wordmark}
           </div>
 
           <h1
-            className="animate-reveal mb-5 whitespace-pre-line text-[clamp(26px,3.4vw,42px)] leading-[1.05] font-extrabold tracking-[-0.02em]"
+            className="animate-reveal display mb-5 whitespace-pre-line text-[clamp(26px,3.4vw,42px)] leading-[1.05]"
             style={{ animationDelay: '200ms' }}
           >
             {hero.title}
@@ -94,7 +94,7 @@ export function Hero({ content: hero = defaultHero }: Readonly<{ content?: typeo
         </div>
       </Container>
 
-      <div className="absolute bottom-[22px] left-1/2 z-[2] flex -translate-x-1/2 flex-col items-center gap-2 text-[11px] font-bold tracking-[0.2em] text-on-dark">
+      <div className="data-label absolute bottom-[22px] left-1/2 z-[2] flex -translate-x-1/2 flex-col items-center gap-2 text-on-dark">
         {hero.scrollHint}
         <span className="animate-bob h-8 w-px bg-[linear-gradient(#c9a15a,transparent)]" />
       </div>

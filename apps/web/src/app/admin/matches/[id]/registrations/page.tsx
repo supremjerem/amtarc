@@ -53,7 +53,7 @@ export default function MatchRegistrationsPage() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="font-display text-2xl tracking-[0.02em]">Inscriptions</h1>
+        <h1 className="display text-2xl">Inscriptions</h1>
         <div className="flex items-center gap-4">
           <button
             type="button"

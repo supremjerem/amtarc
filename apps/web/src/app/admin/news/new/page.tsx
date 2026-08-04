@@ -14,7 +14,7 @@ export default function NewNewsPage() {
 
   return (
     <div>
-      <h1 className="mb-6 font-display text-2xl tracking-[0.02em]">Nouvelle actu</h1>
+      <h1 className="mb-6 display text-2xl">Nouvelle actu</h1>
       <NewsForm submitLabel="Créer" onSubmit={handleSubmit} />
     </div>
   );

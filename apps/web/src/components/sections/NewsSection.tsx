@@ -1,6 +1,7 @@
 import { newsSection, type NewsItem } from '@/lib/content';
 import { getPublishedNews } from '@/lib/api';
 import { Container } from '@/components/ui/Container';
+import { Heading } from '@/components/ui/Heading';
 import { SectionKicker } from '@/components/ui/SectionKicker';
 import { HexagonPattern } from '@/components/ui/HexagonPattern';
 import { Reveal } from '@/components/ui/Reveal';
@@ -28,10 +29,8 @@ function NewsCard({ item }: Readonly<{ item: NewsItem }>) {
         )}
       </div>
       <div className="p-6">
-        <div className="mb-2.5 text-xs font-extrabold tracking-[0.08em] text-overline">
-          {CATEGORY_LABELS[item.category]}
-        </div>
-        <h3 className="mb-2 text-[19px] font-extrabold tracking-[-0.01em]">{item.title}</h3>
+        <div className="mb-2.5 data-label text-overline">{CATEGORY_LABELS[item.category]}</div>
+        <h3 className="mb-2 display text-[19px]">{item.title}</h3>
         <p className="text-sm leading-[1.55] text-ink-soft">{item.excerpt}</p>
       </div>
     </article>
@@ -46,9 +45,9 @@ export async function NewsSection() {
       <Container>
         <Reveal className="mb-8">
           <SectionKicker>{newsSection.kicker}</SectionKicker>
-          <h2 className="text-[clamp(30px,4vw,50px)] leading-[1.02] font-extrabold tracking-[-0.025em]">
+          <Heading className="text-[clamp(30px,4vw,50px)] leading-[1.02]">
             {newsSection.heading}
-          </h2>
+          </Heading>
         </Reveal>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">

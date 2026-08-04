@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { tsvShowcase } from '@/lib/content';
 import { Container } from '@/components/ui/Container';
+import { Heading } from '@/components/ui/Heading';
 import { HexagonPattern } from '@/components/ui/HexagonPattern';
 import { PillButton } from '@/components/ui/PillButton';
 import { Reveal } from '@/components/ui/Reveal';
@@ -12,12 +13,12 @@ export function TsvShowcase() {
       <Container className="relative">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
           <Reveal>
-            <div className="mb-[22px] inline-flex items-center gap-[9px] rounded-pill bg-brand px-3.5 py-1.5 text-xs font-extrabold tracking-[0.1em] text-gold">
+            <div className="mb-[22px] inline-flex items-center gap-[9px] rounded-pill bg-brand px-3.5 py-1.5 data-label text-gold">
               {tsvShowcase.badge}
             </div>
-            <h2 className="mb-[22px] text-[clamp(34px,4.6vw,58px)] leading-none font-extrabold tracking-[-0.03em] whitespace-pre-line">
+            <Heading className="mb-[22px] text-[clamp(34px,4.6vw,58px)] leading-none whitespace-pre-line">
               {tsvShowcase.heading}
-            </h2>
+            </Heading>
             {tsvShowcase.paragraphs.map((paragraph, index) => (
               <p key={paragraph.slice(0, 24)} className={paragraphClassName(index)}>
                 {paragraph}
@@ -28,7 +29,7 @@ export function TsvShowcase() {
                 <div key={stat.label} className="flex items-center gap-5">
                   {index > 0 && <div className="h-9 w-px bg-ink/15" />}
                   <div>
-                    <div className="font-display text-[30px] text-ink">{stat.value}</div>
+                    <div className="data-figure text-[26px] text-ink">{stat.value}</div>
                     <div className="text-[12.5px] font-bold text-[#8a744a]">{stat.label}</div>
                   </div>
                 </div>

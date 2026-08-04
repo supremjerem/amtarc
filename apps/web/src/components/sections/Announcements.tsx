@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { announcements as defaultAnnouncements } from '@/lib/content';
 import { Container } from '@/components/ui/Container';
+import { Heading } from '@/components/ui/Heading';
 import { HexagonPattern } from '@/components/ui/HexagonPattern';
 import { SectionKicker } from '@/components/ui/SectionKicker';
 import { Reveal } from '@/components/ui/Reveal';
@@ -16,9 +17,9 @@ export function Announcements({
         <Reveal className="mb-8 flex flex-wrap items-end justify-between gap-6">
           <div>
             <SectionKicker>{announcements.kicker}</SectionKicker>
-            <h2 className="text-[clamp(30px,4vw,46px)] leading-[1.02] font-extrabold tracking-[-0.02em]">
+            <Heading className="text-[clamp(30px,4vw,46px)] leading-[1.02]">
               {announcements.heading}
-            </h2>
+            </Heading>
           </div>
           <Link
             href={announcements.moreLink.href}
@@ -35,12 +36,10 @@ export function Announcements({
           >
             <HexagonPattern color="#000000" opacity={0.09} />
             <div className="relative">
-              <div className="mb-[18px] inline-block rounded-pill bg-brand px-3 py-[5px] text-[11px] font-extrabold tracking-[0.06em] text-gold">
+              <div className="mb-[18px] inline-block rounded-pill bg-brand px-3 py-[5px] data-label text-gold">
                 {medicalCertificate.badge}
               </div>
-              <h3 className="mb-2.5 text-[27px] font-extrabold tracking-[-0.01em] text-ink">
-                {medicalCertificate.title}
-              </h3>
+              <h3 className="mb-2.5 display text-[27px] text-ink">{medicalCertificate.title}</h3>
               <p className="mb-[22px] max-w-[520px] text-[15.5px] leading-[1.55] font-semibold text-ink-on-gold">
                 {medicalCertificate.body}
               </p>
@@ -58,12 +57,8 @@ export function Announcements({
             delay={0.1}
           >
             <div>
-              <div className="mb-4 text-xs font-extrabold tracking-[0.12em] text-on-dark">
-                {membership.kicker}
-              </div>
-              <h3 className="mb-2.5 text-[22px] font-extrabold tracking-[-0.01em]">
-                {membership.title}
-              </h3>
+              <div className="mb-4 data-label text-on-dark">{membership.kicker}</div>
+              <h3 className="mb-2.5 display text-[22px]">{membership.title}</h3>
               <p className="text-sm leading-[1.55] text-ink-soft">{membership.body}</p>
             </div>
             <Link
@@ -79,12 +74,8 @@ export function Announcements({
             delay={0.12}
           >
             <div>
-              <div className="mb-4 text-xs font-extrabold tracking-[0.12em] text-on-dark">
-                {merch.kicker}
-              </div>
-              <h3 className="mb-2.5 text-[22px] font-extrabold tracking-[-0.01em]">
-                {merch.title}
-              </h3>
+              <div className="mb-4 data-label text-on-dark">{merch.kicker}</div>
+              <h3 className="mb-2.5 display text-[22px]">{merch.title}</h3>
               <p className="text-sm leading-[1.55] text-ink-soft">{merch.body}</p>
             </div>
             <Link

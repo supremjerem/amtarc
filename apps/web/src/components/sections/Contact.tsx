@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { contact as defaultContact } from '@/lib/content';
 import { Container } from '@/components/ui/Container';
+import { Heading } from '@/components/ui/Heading';
 import { HexagonPattern } from '@/components/ui/HexagonPattern';
 import { SocialLinks } from '@/components/ui/SocialLinks';
 import { Reveal } from '@/components/ui/Reveal';
@@ -23,9 +24,9 @@ export function Contact({
             className="pointer-events-none absolute right-[-10px] bottom-[-30px] h-[118%] w-auto opacity-[0.16]"
           />
           <div className="relative max-w-[640px]">
-            <h2 className="mb-[18px] text-[clamp(32px,4.6vw,56px)] leading-none font-extrabold tracking-[-0.03em] text-ink">
+            <Heading className="mb-[18px] text-[clamp(32px,4.6vw,56px)] leading-none text-ink">
               {contact.heading}
-            </h2>
+            </Heading>
             <p className="mb-[34px] max-w-[520px] text-lg leading-[1.55] font-semibold text-ink-on-gold">
               {contact.paragraph}
             </p>
@@ -42,7 +43,7 @@ export function Contact({
             </div>
             <div className="flex flex-wrap gap-10">
               <div>
-                <div className="mb-1.5 text-xs font-extrabold tracking-[0.1em] text-overline-on-gold">
+                <div className="mb-1.5 data-label text-overline-on-gold">
                   {contact.address.kicker}
                 </div>
                 <div className="text-[15px] leading-[1.5] font-bold text-ink">
@@ -52,7 +53,7 @@ export function Contact({
                 </div>
               </div>
               <div>
-                <div className="mb-1.5 text-xs font-extrabold tracking-[0.1em] text-overline-on-gold">
+                <div className="mb-1.5 data-label text-overline-on-gold">
                   {contact.hours.kicker}
                 </div>
                 <div className="text-[15px] leading-[1.5] font-bold text-ink">
