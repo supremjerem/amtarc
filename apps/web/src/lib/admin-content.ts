@@ -125,6 +125,20 @@ export async function saveSectionValues(key: SectionKey, values: unknown): Promi
   }
 }
 
+/**
+ * Clears a section's override so it renders the built-in defaults again.
+ * Returns the values the section falls back to, so the form can show them
+ * without a reload.
+ */
+export async function resetSectionValues(key: SectionKey): Promise<unknown> {
+  const response = await adminFetch(`/content/${key}`, { method: 'DELETE' });
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || `Reset failed with status ${response.status}`);
+  }
+  return SECTION_DEFAULTS[key];
+}
+
 export async function uploadImage(file: File): Promise<string> {
   const formData = new FormData();
   formData.append('file', file);
