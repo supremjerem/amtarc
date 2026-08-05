@@ -125,6 +125,11 @@ Planned:
 - [ ] Switch transactional email to a real provider in production (`MAIL_DRIVER=resend` + API key;
       the log driver covers development)
 - [ ] Continuous deployment once a hosting target is chosen (staging → production via GitHub Environments)
+- [ ] Set a real `ADMIN_PASSWORD` in production. The value in `.env.example` is a placeholder, and the
+      seed only creates the admin account when it is missing (`update: {}`) — changing the variable on
+      an existing database does **not** rotate the password, the stored bcrypt hash has to be updated
+      as well. Worth doing as part of the deployment work, since this account is the only thing
+      guarding a back-office that takes registrations and payments.
 - [ ] Shared `packages/` workspace for API/web DTO types
 - [ ] Raise the API coverage threshold as controller/guard tests land
 - [ ] ESLint 10 — blocked upstream: `eslint-plugin-react` (pulled in by `eslint-config-next`) still
