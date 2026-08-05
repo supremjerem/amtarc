@@ -26,6 +26,9 @@ pnpm-debug.log*
 # personal working notes (not project content)
 MEMO.md
 
+# local agent tooling config (Codex / ChatGPT desktop)
+.codex/
+
 # os
 .DS_Store
 
