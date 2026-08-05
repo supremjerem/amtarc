@@ -67,7 +67,14 @@ pnpm dev
 
 - Web: http://localhost:3000
 - API: http://localhost:3001
+
 - Admin back-office (manage news without touching code): http://localhost:3000/admin/login — log in with `ADMIN_EMAIL`/`ADMIN_PASSWORD` from `apps/api/.env` (seeded on first `prisma db seed` run).
+
+The seed creates the admin account, a few news items, and one published demo match with squads and a
+partly-squadded roster, so `/matchs` and the admin squadding board have something to show on a fresh
+install. Its dates are relative to the seed run, so the demo match is always upcoming and still open
+for registration. Every seed write is an upsert on a fixed id — re-running it never duplicates
+anything, and never overwrites rows you have edited.
 
 > **Note on local Postgres:** `docker compose up -d` is the intended way to run Postgres locally, but requires Docker Hub to be reachable. If Docker Hub isn't accessible from your machine/network, install PostgreSQL directly instead (e.g. `brew install postgresql@16 && brew services start postgresql@16`) and create a matching role/database (`amtarc`/`amtarc`) so `DATABASE_URL` in `apps/api/.env` resolves without changes.
 
