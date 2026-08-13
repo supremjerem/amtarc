@@ -43,9 +43,10 @@ export class MatchesService {
       include: {
         ...squadsOrdered,
         ...activeRegistrationsCount,
-        // Public roster, FFTir-style: names, division and squad only. No
-        // contact or licence data, and deliberately no payment status — who
-        // has not paid yet is the organizers' business, not the public's.
+        // Public roster, FFTir-style: name, division, category and squad —
+        // what a start list shows. No contact or licence data, and
+        // deliberately no payment status: who has not paid yet is the
+        // organizers' business, not the public's.
         registrations: {
           where: {
             status: { in: [RegistrationStatus.AWAITING_PAYMENT, RegistrationStatus.CONFIRMED] },

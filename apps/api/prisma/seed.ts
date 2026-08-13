@@ -151,14 +151,23 @@ async function main() {
   const adminPassword = process.env.ADMIN_PASSWORD;
   if (adminEmail && adminPassword) {
     const passwordHash = await bcrypt.hash(adminPassword, 10);
+    // The hash is rewritten on every run, unlike the demo content below: there
+    // is no password-change screen, so the seed is the only way to rotate it.
+    // Leaving it at `update: {}` meant changing ADMIN_PASSWORD on an existing
+    // database silently did nothing.
     await prisma.admin.upsert({
       where: { email: adminEmail },
-      update: {},
+      update: { passwordHash },
       create: { email: adminEmail, passwordHash, name: 'Admin AMTARC' },
     });
   }
 
-  await seedDemoMatch();
+  // Demo content is for a fresh checkout, not for a live club site: it would
+  // publish a match with a fictional IBAN that visitors could act on. Opt in
+  // with SEED_DEMO_MATCH=true if a production-like environment needs it.
+  if (process.env.NODE_ENV !== 'production' || process.env.SEED_DEMO_MATCH === 'true') {
+    await seedDemoMatch();
+  }
 
   console.log('Seed complete.');
 }
