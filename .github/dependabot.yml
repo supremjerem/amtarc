@@ -5,8 +5,11 @@ updates:
   - package-ecosystem: npm
     directory: /
     target-branch: develop
+    # Daily, not weekly: a grouped PR that sits for days gets overtaken by
+    # develop and conflicts on the lockfile, and Dependabot cannot rebase out
+    # of that state (its up-to-date check ignores the lockfile). See PR #27.
     schedule:
-      interval: weekly
+      interval: daily
     groups:
       minor-and-patch:
         update-types: [minor, patch]
