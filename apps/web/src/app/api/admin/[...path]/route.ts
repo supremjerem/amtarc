@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { isSafeApiSegment } from '@/lib/api-path';
 import { ADMIN_TOKEN_COOKIE } from '@/lib/auth';
 
 const API_URL = process.env.API_URL ?? 'http://localhost:3001';
@@ -23,14 +24,12 @@ const ALLOWED_ROUTES: Record<string, RegExp[]> = {
 
 type RouteContext = { params: Promise<{ path: string[] }> };
 
-// Segments are matched after decoding, so reject anything that could change the
-// path's meaning once fetch() normalizes it (traversal, an injected query or
-// fragment, or a smuggled separator) before the allowlist is consulted.
-const SAFE_SEGMENT = /^[A-Za-z0-9._-]+$/;
-
 async function proxyRequest(request: NextRequest, context: RouteContext) {
   const segments = (await context.params).path;
-  if (!segments.every((segment) => SAFE_SEGMENT.test(segment) && segment !== '..')) {
+  // Validate before the allowlist is consulted: patterns are matched on the
+  // decoded path, so a segment that reshapes the URL later would be matched
+  // against something other than what fetch() ends up requesting.
+  if (!segments.every(isSafeApiSegment)) {
     return NextResponse.json({ message: 'Not found' }, { status: 404 });
   }
 

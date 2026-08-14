@@ -31,14 +31,15 @@ jobs:
 
     env:
       DATABASE_URL: postgresql://amtarc:amtarc@localhost:5432/amtarc
-      JWT_SECRET: ci-only-secret
+      # Throwaway values: long enough to clear the API's env validation.
+      JWT_SECRET: ci-only-jwt-secret-not-used-anywhere-else
       JWT_EXPIRES_IN: 1h
       PORT: '3001'
       CORS_ORIGIN: http://localhost:3000
       ADMIN_EMAIL: admin@amtarc.test
       ADMIN_PASSWORD: ci-only-password
       WEB_REVALIDATE_URL: http://localhost:3000/api/revalidate
-      REVALIDATE_SECRET: ci-only-secret
+      REVALIDATE_SECRET: ci-only-revalidate-secret-not-used-anywhere-else
       API_URL: http://localhost:3001
 
     steps:
