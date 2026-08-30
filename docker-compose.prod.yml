@@ -1,0 +1,89 @@
+# Production stack — deploy to the VPS, NOT used for local development
+# (local dev uses docker-compose.yml, which only runs Postgres).
+#
+# Server layout assumed (see CLAUDE-context-amtarc.md): lives in
+# ~/apps/live/amtarc/ next to a .env file (never committed) that supplies the
+# variables referenced below. Traefik already runs in ~/apps/tools/traefik/
+# and owns the external `web` network.
+#
+# Usage on the server:
+#   docker compose -f docker-compose.prod.yml pull
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# Images are built and pushed to GHCR by .github/workflows/docker-publish.yml
+# on every push to main. Set IMAGE_TAG in the server .env to pin a specific
+# build (defaults to latest).
+
+services:
+  web:
+    image: ghcr.io/supremjerem/amtarc-web:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    networks:
+      - web
+      - amtarc-internal
+    environment:
+      API_URL: http://api:3001
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET}
+    depends_on:
+      - api
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.amtarc.rule=Host(`${DOMAIN}`)'
+      - 'traefik.http.routers.amtarc.entrypoints=websecure'
+      - 'traefik.http.routers.amtarc.tls.certresolver=letsencrypt'
+      - 'traefik.http.services.amtarc.loadbalancer.server.port=3000'
+
+  api:
+    image: ghcr.io/supremjerem/amtarc-api:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    networks:
+      - amtarc-internal
+    environment:
+      DATABASE_URL: postgresql://amtarc:${POSTGRES_PASSWORD}@postgres:5432/amtarc
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      PORT: 3001
+      # No reverse proxy sits in front of the API itself (only the web
+      # container talks to it, over the internal network) — leave at 0.
+      TRUST_PROXY: 0
+      CORS_ORIGIN: https://${DOMAIN}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      WEB_REVALIDATE_URL: http://web:3000/api/revalidate
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET}
+      API_PUBLIC_URL: https://${DOMAIN}
+      MAIL_DRIVER: ${MAIL_DRIVER:-log}
+      MAIL_FROM: ${MAIL_FROM:-AMTARC <no-reply@amtarc.fr>}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+    volumes:
+      - amtarc_api_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    networks:
+      - amtarc-internal
+    environment:
+      POSTGRES_USER: amtarc
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: amtarc
+    volumes:
+      - amtarc_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U amtarc']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+networks:
+  web:
+    external: true
+  amtarc-internal:
+    driver: bridge
+
+volumes:
+  amtarc_db_data:
+  amtarc_api_uploads:

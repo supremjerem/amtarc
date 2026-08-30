@@ -12,6 +12,11 @@ export async function adminFetch(path: string, options: RequestInit = {}): Promi
 
   const response = await fetch(`/api/admin${path}`, { ...options, cache: 'no-store', headers });
   if (response.status === 401 && typeof window !== 'undefined') {
+    // A hard navigation is deliberate here, so router.push() is not what we
+    // want: the session is gone, and a full reload is what guarantees no stale
+    // authenticated data survives in the client cache. This helper is also a
+    // plain function called from several components, so it has no router.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.assign('/admin/login');
   }
   return response;

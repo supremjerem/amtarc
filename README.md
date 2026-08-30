@@ -99,13 +99,35 @@ apps/
 docs/
   adr/    architecture decision records
 .github/  CI (lint, tests, build), CodeQL, Dependabot
-docker-compose.yml   local Postgres for development
+docker-compose.yml        local Postgres for development
+docker-compose.prod.yml   production stack (deployed to the VPS, not used locally)
 ```
 
 ## Development workflow
 
 - `main` is protected and always deployable; day-to-day work happens on `develop` (or feature branches based on it) and reaches `main` through reviewed pull requests with green CI.
 - Commit messages follow [Conventional Commits](https://www.conventionalcommits.org) (`feat:`, `fix:`, `test:`, `docs:`, …).
+
+## Deployment
+
+Every merge to `main` that passes CI triggers `.github/workflows/docker-publish.yml`, which builds
+`apps/web` and `apps/api` into Docker images and pushes them to GHCR:
+
+- `ghcr.io/supremjerem/amtarc-web`
+- `ghcr.io/supremjerem/amtarc-api`
+
+tagged `latest` and with the commit SHA. This is build-and-push only — nothing connects to the
+server automatically. On the VPS (`~/apps/live/amtarc/`, see `docker-compose.prod.yml`):
+
+```bash
+docker compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml up -d
+```
+
+`.env.prod.example` documents the variables the production compose file expects (copy it to `.env`
+on the server and fill in real secrets — never commit the filled-in version). See
+`CLAUDE-context-amtarc.md` for the server's existing Traefik/network setup that the compose file is
+built against.
 
 ## Roadmap
 
@@ -129,7 +151,8 @@ Planned:
 
 - [ ] Switch transactional email to a real provider in production (`MAIL_DRIVER=resend` + API key;
       the log driver covers development)
-- [ ] Continuous deployment once a hosting target is chosen (staging → production via GitHub Environments)
+- [x] Docker images for `web`/`api` published to GHCR on every merge to `main` ([workflow](.github/workflows/docker-publish.yml)); pulling and restarting on the VPS is still a manual step by design
+- [ ] First deploy to the VPS (`amtarc.supremjerem.com`, DNS not pointed yet)
 - [ ] Shared `packages/` workspace for API/web DTO types
 - [ ] Raise the API coverage threshold as controller/guard tests land
 - [ ] ESLint 10 — blocked upstream: `eslint-plugin-react` (pulled in by `eslint-config-next`) still
