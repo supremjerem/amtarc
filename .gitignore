@@ -6,7 +6,9 @@ node_modules/
 .env
 .env.local
 .env.*.local
+.env.prod
 !.env.example
+!.env.prod.example
 
 # next.js
 apps/web/.next/
