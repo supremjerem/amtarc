@@ -28,6 +28,11 @@ services:
       - api
     labels:
       - 'traefik.enable=true'
+      # Required: web sits on both the external `web` network (Traefik) and
+      # amtarc-internal (the api/postgres network) — without this, Traefik's
+      # docker provider can pick the amtarc-internal IP, which it cannot
+      # reach, and every request hangs until it 504s.
+      - 'traefik.docker.network=web'
       - 'traefik.http.routers.amtarc.rule=Host(`${DOMAIN}`)'
       - 'traefik.http.routers.amtarc.entrypoints=websecure'
       - 'traefik.http.routers.amtarc.tls.certresolver=letsencrypt'
