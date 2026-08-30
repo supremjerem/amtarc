@@ -25,12 +25,18 @@ RUN pnpm --filter api deploy --legacy /prod/api
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+# `prisma db seed` spawns `tsx` by name rather than by path.
+ENV PATH="/app/node_modules/.bin:${PATH}"
 RUN addgroup -S app && adduser -S app -G app
 COPY --from=builder /prod/api/node_modules ./node_modules
 COPY --from=builder /repo/apps/api/dist ./dist
 COPY --from=builder /prod/api/package.json ./package.json
 COPY --from=builder /repo/apps/api/prisma ./prisma
 COPY --from=builder /repo/apps/api/prisma.config.ts ./prisma.config.ts
+# prisma/seed.ts imports the generated client from ../src/generated (not
+# dist/generated) since it runs directly via tsx rather than through nest
+# build's output — needed for `prisma db seed` to work against this image.
+COPY --from=builder /repo/apps/api/src/generated ./src/generated
 COPY apps/api/docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh && mkdir -p ./uploads && chown -R app:app /app
 USER app
