@@ -1,0 +1,38 @@
+# dependencies
+node_modules
+**/node_modules
+.pnpm-store
+
+# env — real secrets never enter a build context
+.env
+.env.local
+.env.*.local
+apps/**/.env
+apps/**/.env.local
+
+# build output (rebuilt inside the image)
+apps/web/.next
+apps/web/out
+apps/api/dist
+apps/api/src/generated
+
+# test / coverage
+coverage
+apps/**/coverage
+
+# local-only content
+apps/api/uploads
+MEMO.md
+CLAUDE-context-amtarc.md
+
+# vcs / editors / os
+.git
+.github
+.vscode
+.idea
+.DS_Store
+
+# misc
+*.log
+*.tsbuildinfo
+docs
