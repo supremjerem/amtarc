@@ -152,7 +152,7 @@ Planned:
 - [ ] Switch transactional email to a real provider in production (`MAIL_DRIVER=resend` + API key;
       the log driver covers development)
 - [x] Docker images for `web`/`api` published to GHCR on every merge to `main` ([workflow](.github/workflows/docker-publish.yml)); pulling and restarting on the VPS is still a manual step by design
-- [ ] DNS + first deploy to the VPS once a domain is chosen
+- [ ] First deploy to the VPS (`amtarc.supremjerem.com`, DNS not pointed yet)
 - [ ] Shared `packages/` workspace for API/web DTO types
 - [ ] Raise the API coverage threshold as controller/guard tests land
 - [ ] ESLint 10 — blocked upstream: `eslint-plugin-react` (pulled in by `eslint-config-next`) still
