@@ -3,11 +3,13 @@ import {
   IsArray,
   IsEmail,
   IsEnum,
+  IsIn,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
 import { Division, ShooterCategory } from '../../generated/prisma/client';
+import { REGISTRABLE_DIVISIONS } from '../registration-options';
 
 export class CreateRegistrationDto {
   @IsString()
@@ -25,15 +27,15 @@ export class CreateRegistrationDto {
   @IsNotEmpty()
   licenceNumber!: string;
 
-  @IsOptional()
   @IsString()
-  club?: string;
+  @IsNotEmpty()
+  club!: string;
 
   @IsOptional()
   @IsString()
   region?: string;
 
-  @IsEnum(Division)
+  @IsIn(REGISTRABLE_DIVISIONS)
   division!: Division;
 
   @IsOptional()

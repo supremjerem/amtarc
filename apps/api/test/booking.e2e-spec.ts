@@ -79,6 +79,7 @@ describe('Booking flow (e2e)', () => {
         lastName: 'Cavellec',
         email,
         licenceNumber: '123456',
+        club: 'AMTARC',
         division: 'PRODUCTION_OPTICS',
         ...extra,
       });
@@ -100,6 +101,8 @@ describe('Booking flow (e2e)', () => {
     it('rejects unknown fields and invalid enums', async () => {
       await register('e2e-bad@example.test', { unexpected: 'x' }).expect(400);
       await register('e2e-bad@example.test', { division: 'BAZOOKA' }).expect(400);
+      await register('e2e-bad@example.test', { division: 'REVOLVER' }).expect(400);
+      await register('e2e-bad@example.test', { club: '' }).expect(400);
     });
 
     it('wait-lists once squad capacity is reached', async () => {
