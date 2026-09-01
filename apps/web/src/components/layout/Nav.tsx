@@ -44,8 +44,8 @@ export function Nav() {
           <Image
             src="/panther.png"
             alt="Panthère AMTARC"
-            width={24}
-            height={34}
+            width={698}
+            height={760}
             className="h-[34px] w-auto drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)]"
             priority
           />

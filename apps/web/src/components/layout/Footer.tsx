@@ -19,8 +19,8 @@ export function Footer() {
               <Image
                 src="/panther.png"
                 alt="Panthère AMTARC"
-                width={27}
-                height={38}
+                width={698}
+                height={760}
                 className="h-[38px] w-auto"
               />
               <span className="bg-gold-gradient bg-clip-text display-wordmark text-[26px] leading-none text-transparent">

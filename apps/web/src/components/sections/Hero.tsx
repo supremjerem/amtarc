@@ -86,8 +86,8 @@ export function Hero({ content: hero = defaultHero }: Readonly<{ content?: typeo
           <Image
             src="/panther.png"
             alt="Panthère AMTARC"
-            width={420}
-            height={593}
+            width={698}
+            height={760}
             priority
             className="relative h-auto w-[min(88%,420px)] drop-shadow-[0_26px_44px_rgba(20,16,8,0.4)]"
           />
