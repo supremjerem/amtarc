@@ -50,9 +50,9 @@ const DIVISION_LABELS: Record<string, string> = {
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  OVERALL: 'Général',
+  OVERALL: 'Overall',
   JUNIOR: 'Junior',
-  LADY: 'Dame',
+  LADY: 'Lady',
   SENIOR: 'Senior',
   SUPER_SENIOR: 'Super Senior',
 };

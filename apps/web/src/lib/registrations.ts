@@ -27,12 +27,33 @@ export const CATEGORIES = ['OVERALL', 'JUNIOR', 'LADY', 'SENIOR', 'SUPER_SENIOR'
 export type ShooterCategory = (typeof CATEGORIES)[number];
 
 export const CATEGORY_LABELS: Record<ShooterCategory, string> = {
-  OVERALL: 'Général',
+  OVERALL: 'Overall',
   JUNIOR: 'Junior',
-  LADY: 'Dame',
+  LADY: 'Lady',
   SENIOR: 'Senior',
   SUPER_SENIOR: 'Super Senior',
 };
+
+// Subset actually offered on the public registration form, in display order.
+// The full enums above stay complete for historical registrations, the admin
+// views and the CSV export.
+export const REGISTRABLE_DIVISIONS = [
+  'OPEN',
+  'STANDARD',
+  'PRODUCTION',
+  'PRODUCTION_OPTICS',
+  'OPTICS',
+  'CLASSIC',
+  'PCC',
+] as const satisfies readonly Division[];
+
+export const REGISTRABLE_CATEGORIES = [
+  'OVERALL',
+  'LADY',
+  'JUNIOR',
+  'SENIOR',
+  'SUPER_SENIOR',
+] as const satisfies readonly ShooterCategory[];
 
 export type RegistrationStatus = 'AWAITING_PAYMENT' | 'CONFIRMED' | 'WAITLISTED' | 'CANCELLED';
 
@@ -48,7 +69,7 @@ export type RegistrationInput = {
   lastName: string;
   email: string;
   licenceNumber: string;
-  club?: string;
+  club: string;
   region?: string;
   division: Division;
   category?: ShooterCategory;

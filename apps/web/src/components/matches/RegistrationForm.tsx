@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import {
-  CATEGORIES,
   CATEGORY_LABELS,
-  DIVISIONS,
   DIVISION_LABELS,
+  REGISTRABLE_CATEGORIES,
+  REGISTRABLE_DIVISIONS,
   registerForMatch,
   type Division,
   type Registration,
@@ -59,7 +59,7 @@ export function RegistrationForm({
         lastName,
         email,
         licenceNumber,
-        club: club || undefined,
+        club: club.trim(),
         division,
         category,
         squadRequests: wishes.map((wish) => wish.trim()).filter((wish) => wish !== ''),
@@ -146,8 +146,9 @@ export function RegistrationForm({
             className={inputClassName}
           />
         </Field>
-        <Field label="Club">
+        <Field label="Club" required>
           <input
+            required
             value={club}
             onChange={(e) => setClub(e.target.value)}
             className={inputClassName}
@@ -159,7 +160,7 @@ export function RegistrationForm({
             onChange={(e) => setDivision(e.target.value as Division)}
             className={inputClassName}
           >
-            {DIVISIONS.map((value) => (
+            {REGISTRABLE_DIVISIONS.map((value) => (
               <option key={value} value={value}>
                 {DIVISION_LABELS[value]}
               </option>
@@ -172,7 +173,7 @@ export function RegistrationForm({
             onChange={(e) => setCategory(e.target.value as ShooterCategory)}
             className={inputClassName}
           >
-            {CATEGORIES.map((value) => (
+            {REGISTRABLE_CATEGORIES.map((value) => (
               <option key={value} value={value}>
                 {CATEGORY_LABELS[value]}
               </option>
