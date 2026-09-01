@@ -26,6 +26,7 @@ const dto: CreateRegistrationDto = {
   lastName: 'Cavellec',
   email: 'Jeremie@Example.COM',
   licenceNumber: '123456',
+  club: 'AMTARC',
   division: 'PRODUCTION_OPTICS',
   squadRequests: ['  Alice Martin ', '', 'Bob Durand'],
 };

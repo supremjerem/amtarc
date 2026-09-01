@@ -37,7 +37,7 @@ describe('buildRegistrationsCsv', () => {
     const [, row] = csv.split('\r\n');
 
     expect(row).toBe(
-      'Squad 1;Cavellec;Jérémie;123456;Production Optics;Général;AMTARC;Occitanie;jc@example.com;Confirmée;AMT-ABC234;15/09/2026',
+      'Squad 1;Cavellec;Jérémie;123456;Production Optics;Overall;AMTARC;Occitanie;jc@example.com;Confirmée;AMT-ABC234;15/09/2026',
     );
   });
 
