@@ -21,9 +21,9 @@ export function Contact({
             src="/panther.png"
             alt=""
             aria-hidden="true"
-            width={375}
-            height={530}
-            className="pointer-events-none absolute right-[-10px] bottom-[-30px] h-[118%] w-auto opacity-[0.16]"
+            width={698}
+            height={760}
+            className="pointer-events-none absolute right-[-40px] bottom-[-30px] h-[118%] w-auto opacity-[0.16]"
           />
           <div className="relative max-w-[640px]">
             <Heading className="mb-[18px] text-[clamp(32px,4.6vw,56px)] leading-none text-ink">

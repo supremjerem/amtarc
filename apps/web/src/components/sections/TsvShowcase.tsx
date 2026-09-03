@@ -50,8 +50,8 @@ export function TsvShowcase() {
             <Image
               src="/panther.png"
               alt="Panthère AMTARC"
-              width={400}
-              height={565}
+              width={698}
+              height={760}
               className="relative h-auto w-[min(80%,400px)] drop-shadow-[0_28px_46px_rgba(20,16,8,0.38)]"
             />
           </Reveal>
