@@ -98,7 +98,7 @@ apps/
   api/    NestJS API (news, site content, uploads, matches, registrations, JWT auth)
 docs/
   adr/    architecture decision records
-.github/  CI (lint, tests, build), CodeQL, Dependabot
+.github/  CI (lint, tests, build), CodeQL, Dependabot, GHCR image publish
 docker-compose.yml        local Postgres for development
 docker-compose.prod.yml   production stack (deployed to the VPS, not used locally)
 ```
@@ -124,10 +124,12 @@ docker compose -f docker-compose.prod.yml pull
 docker compose -f docker-compose.prod.yml up -d
 ```
 
-`.env.prod.example` documents the variables the production compose file expects (copy it to `.env`
-on the server and fill in real secrets — never commit the filled-in version). See
-`CLAUDE-context-amtarc.md` for the server's existing Traefik/network setup that the compose file is
-built against.
+The site is live at **https://amtarc.supremjerem.com**, served over HTTPS by the VPS's existing
+Traefik (Let's Encrypt). `docker-compose.prod.yml` is heavily commented with the network layout it
+expects (a project-private bridge network for app↔DB, only the web container joined to Traefik's
+shared `web` network); `.env.prod.example` lists every variable it reads — copy it to `.env` on the
+server (that exact name, so `docker compose` picks it up) and fill in real secrets, never committing
+the filled-in version.
 
 ## Roadmap
 
@@ -146,13 +148,21 @@ Done:
 - [x] Deployment safety rails: the API refuses to boot on placeholder or short secrets, the seed
       rotates the admin password hash instead of only creating it, and the demo match stays out of
       production
+- [x] Docker images for `web`/`api` published to GHCR on every merge to `main`
+      ([workflow](.github/workflows/docker-publish.yml)); pulling and restarting on the VPS is a
+      deliberate manual step
+- [x] First deploy to the VPS: live at **https://amtarc.supremjerem.com** over HTTPS (Let's Encrypt
+      via the existing Traefik), the API/DB on a project-private Docker network, images pulled from
+      GHCR. Fixes found on the way: pin the Traefik router to the `web` network, and ship `tsx` +
+      the generated Prisma client in the API image so `prisma db seed` runs in-container
+- [x] Club logo artwork refreshed: a proper vector-style panther across the site, and the full
+      AMTARC lockup (panther + wordmark + pistol / occitan cross / IPSC shield) in the TSV section
 
 Planned:
 
-- [ ] Switch transactional email to a real provider in production (`MAIL_DRIVER=resend` + API key;
-      the log driver covers development)
-- [x] Docker images for `web`/`api` published to GHCR on every merge to `main` ([workflow](.github/workflows/docker-publish.yml)); pulling and restarting on the VPS is still a manual step by design
-- [ ] First deploy to the VPS (`amtarc.supremjerem.com`, DNS not pointed yet)
+- [ ] Switch transactional email to a real provider in production — Resend is wired up
+      (`MAIL_DRIVER=resend` + API key); needs the account and a verified sending domain. The log
+      driver covers development
 - [ ] Shared `packages/` workspace for API/web DTO types
 - [ ] Raise the API coverage threshold as controller/guard tests land
 - [ ] ESLint 10 — blocked upstream: `eslint-plugin-react` (pulled in by `eslint-config-next`) still

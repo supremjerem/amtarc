@@ -1,8 +1,9 @@
 # Match booking system — design plan
 
-Status: planned (roadmap item). Drafted 2026-08-03 from an analysis of the current
-federation flow at ipsc.fftir.org (Challenge Montagne Noire 2026 used as reference),
-revised the same day after review with the club.
+Status: shipped — all four rollout phases are live (see "Rollout phases" at the end).
+Drafted 2026-08-03 from an analysis of the current federation flow at ipsc.fftir.org
+(Challenge Montagne Noire 2026 used as reference), revised the same day after review
+with the club. Kept as the design record.
 
 ## Problem
 
