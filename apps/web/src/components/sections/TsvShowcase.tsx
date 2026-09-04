@@ -48,11 +48,12 @@ export function TsvShowcase() {
           <Reveal delay={0.1} className="relative flex items-center justify-center">
             <div className="absolute h-[min(94%,460px)] w-[min(94%,460px)] rounded-full bg-[radial-gradient(circle,rgba(255,138,0,0.4),rgba(255,138,0,0)_68%)]" />
             <Image
-              src="/panther.png"
-              alt="Panthère AMTARC"
-              width={698}
-              height={760}
-              className="relative h-auto w-[min(80%,400px)] drop-shadow-[0_28px_46px_rgba(20,16,8,0.38)]"
+              src="/amtarc-logo.png"
+              alt="AMTARC — panthère, pistolet, croix occitane et écusson IPSC"
+              width={1400}
+              height={793}
+              unoptimized
+              className="relative h-auto w-[min(96%,620px)] drop-shadow-[0_24px_42px_rgba(20,16,8,0.32)]"
             />
           </Reveal>
         </div>
