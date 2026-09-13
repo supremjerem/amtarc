@@ -1,4 +1,5 @@
 > [!IMPORTANT]
+>
 > ## This repository is archived — it is no longer the AMTARC website
 >
 > Since **13 September 2026**, `amtarc.supremjerem.com` is served by a complete rewrite in
