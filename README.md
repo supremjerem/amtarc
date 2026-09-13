@@ -1,4 +1,37 @@
-# AMTARC — website monorepo
+> [!IMPORTANT]
+>
+> ## This repository is archived — it is no longer the AMTARC website
+>
+> Since **13 September 2026**, `amtarc.supremjerem.com` is served by a complete rewrite in
+> **ASP.NET Core (.NET 10)**, in a separate repository:
+>
+> ### 👉 **[supremjerem/amtarc-web](https://github.com/supremjerem/amtarc-web)**
+>
+> Nothing here runs in production any more. The code below is kept for reference and for the
+> history of how the site was first built.
+>
+> ### Why the rewrite
+>
+> The club's maintainer is a .NET engineer, and the site needs to stay maintainable by the people
+> who will actually touch it — twice a year, for years. Beyond that, the rewrite folded two
+> services into one: 25 runtime npm dependencies became 3 NuGet packages, 14 production
+> environment variables became 6, and the glue that only existed because `web` and `api` were
+> separate — the BFF proxy, the cache-revalidation webhook and its shared secret, the JWT
+> plumbing, the CORS configuration — was deleted rather than ported. Both production incidents
+> this stack suffered were in exactly that glue.
+>
+> ### What did not come across
+>
+> The **match-booking feature** — matches, squads, the squadding algorithm, registrations and the
+> FFTir CSV export — was deliberately dropped. It moves to a separate WordPress module that the
+> new site links out to. If you are looking for that code, it is here, in `apps/api/src/matches`
+> and `apps/web/src/app/admin/matches`, and this repository is the only place it exists.
+>
+> The news and editable-content features were ported in full.
+
+---
+
+# AMTARC — website monorepo (archived)
 
 ![AMTARC homepage screenshot](docs/screenshot.jpg)
 
